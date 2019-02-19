@@ -61,7 +61,7 @@ module sdp =
             Or (xElement.Descendants()
             |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString()))))
         |"Not" -> 
-            Not (sdpXmlToApplicabilityRules (xElement.FirstNode.ToString()))
+            Not (sdpXmlToApplicabilityRules ((xElement.Descendants()|>Seq.head).ToString()))
         |_ -> raise (new NotSupportedException(sprintf "Applicability rule for '%s' is not implemented." xElement.Name.LocalName))
 
     let rec evaluateApplicabilityRule applicabilityRule =
