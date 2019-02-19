@@ -52,6 +52,9 @@
     <Reference Include="FSharp.Core">
       <HintPath>..\..\..\packages\FSharp.Core.4.6.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.UpdateServices.Administration">
+      <HintPath>..\..\..\tools\Update Services\Api\Microsoft.UpdateServices.Administration.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
