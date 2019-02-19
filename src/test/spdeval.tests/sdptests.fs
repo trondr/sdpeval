@@ -26,6 +26,12 @@ module sdptest =
 
     [<TestCase("<lar:Not><lar:False /></lar:Not>",true)>]
     [<TestCase("<lar:Not><lar:True /></lar:Not>",false)>]
+
+    [<TestCase("<lar:And><bar:WmiQuery Namespace=\"Root\cimv2\" WqlQuery=\"select * from Win32_LogicalDisk where (DeviceId='C:') \" /></lar:And>",true)>]
+    [<TestCase("<lar:And><bar:WmiQuery Namespace=\"Root\cimv2\" WqlQuery=\"select * from Win32_LogicalDisk where (DeviceId='Z:') \" /></lar:And>",false)>]
+
+    //[<TestCase("<lar:And><bar:Processor Architecture=\"0\"/></lar:And>",true)>]
+    
     let sdpXmlToApplicabilityRulesTests (xmlString,expectedEvaluation:bool) =
         let actual = sdpXmlToApplicabilityRules xmlString
         let actualEvaluation = evaluateApplicabilityRule actual

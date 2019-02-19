@@ -39,6 +39,9 @@ module sdp =
     open System.Xml.Linq
     open System.Xml
 
+    let getAttribute (xElement:XElement) (attributeName:string) =        
+        xElement.Attribute(XName.Get(attributeName)).Value
+
     let rec sdpXmlToApplicabilityRules (applicabilityXml:string) =
         let nameTable = new NameTable()
         let namespaceManager = new XmlNamespaceManager(nameTable);
@@ -50,7 +53,7 @@ module sdp =
         match xElement.Name.LocalName with
         |"True" -> True
         |"False" -> False
-        |"WmiQuery" -> WmiQuery{NameSpace="";WqlQuery=""}
+        |"WmiQuery" -> WmiQuery{NameSpace=(getAttribute xElement "Namespace");WqlQuery=(getAttribute xElement "WqlQuery")}
         |"And" -> 
             And (xElement.Descendants()
             |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString()))))
@@ -59,7 +62,7 @@ module sdp =
             |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString()))))
         |"Not" -> 
             Not (sdpXmlToApplicabilityRules (xElement.FirstNode.ToString()))
-        |_ -> False
+        |_ -> raise (new NotSupportedException(sprintf "Applicability rule for '%s' is not implemented." xElement.Name.LocalName))
 
     let rec evaluateApplicabilityRule applicabilityRule =
         match applicabilityRule with
