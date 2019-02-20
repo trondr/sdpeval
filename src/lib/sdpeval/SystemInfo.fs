@@ -2,6 +2,7 @@
 
 module SystemInfo =
 
+    open System
     open spdeval.csharp
 
     let systemInfo = 
@@ -15,4 +16,37 @@ module SystemInfo =
 
     let processorRevision =
         systemInfo.wProcessorRevision
-           
+
+    let toUInt16 (value:string) =
+        System.Convert.ToUInt16(value)
+
+    let toInt16 (value:string) =
+        System.Convert.ToInt16(value)
+
+    let isProcessor architecture level revision =
+        
+        let all = [|architecture;level;revision|]
+        let allIsNull = all|>Array.forall(fun i-> (i = null))
+
+        if(allIsNull) then
+            raise (new Exception("Invalid Processor definition in SDP.xml. At least one of the attributes must be set: Architecture,Level,Revision"))
+                
+        let isArchitecture =
+            if(architecture = null) then
+                true
+            else
+                (toUInt16 architecture) = processorArchitecture
+
+        let isLevel =
+            if(level = null) then
+                true
+            else
+                (toInt16 level) = processorLevel
+
+        let isRevision =
+            if(revision = null) then
+                true
+            else
+                (toInt16 revision) = processorRevision
+        
+        (isArchitecture && isLevel && isRevision)           

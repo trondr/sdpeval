@@ -16,7 +16,7 @@ module sdp =
     type WmiQuery = {NameSpace:string;WqlQuery:string}
 
     type Processor = {Architecture:string;Level:string;Revision:string}
-
+    
     type ApplicabilityRule =
         |True
         |False
@@ -40,12 +40,6 @@ module sdp =
         else
             attributeValue.Value
     
-    let toUInt16 (value:string) =
-        System.Convert.ToUInt16(value)
-
-    let toInt16 (value:string) =
-        System.Convert.ToInt16(value)
-
     let toProcessor xElement =
         let architecture = (getAttribute xElement "Architecture" (fun _ -> null))
         let level = (getAttribute xElement "Level" (fun _ -> null))
@@ -74,34 +68,6 @@ module sdp =
         |"Not" -> 
             Not (sdpXmlToApplicabilityRules ((xElement.Descendants()|>Seq.head).ToString()))
         |_ -> raise (new NotSupportedException(sprintf "Applicability rule for '%s' is not implemented." xElement.Name.LocalName))
-
-    let isProcessor architecture level revision =
-        
-        let all = [|architecture;level;revision|]
-        let allIsNull = all|>Array.forall(fun i-> (i = null))
-
-        if(allIsNull) then
-            raise (new Exception("Invalid Processor definition in SDP.xml. At least one of the attributes must be set: Architecture,Level,Revision"))
-                
-        let isArchitecture =
-            if(architecture = null) then
-                true
-            else
-                (toUInt16 architecture) = processorArchitecture
-
-        let isLevel =
-            if(level = null) then
-                true
-            else
-                (toInt16 level) = processorLevel
-
-        let isRevision =
-            if(revision = null) then
-                true
-            else
-                (toInt16 revision) = processorRevision
-        
-        (isArchitecture && isLevel && isRevision)
 
     let rec evaluateApplicabilityRule applicabilityRule =
         match applicabilityRule with
