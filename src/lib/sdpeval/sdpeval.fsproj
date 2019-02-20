@@ -43,8 +43,9 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="XmlToolKit.fs" />
+    <Compile Include="SystemInfo.fs" />
+    <Compile Include="Wmi.fs" />
     <Compile Include="sdp.fs" />
-    <None Include="Script.fsx" />
     <Content Include="packages.config" />
     <Content Include="README.txt" />
   </ItemGroup>
