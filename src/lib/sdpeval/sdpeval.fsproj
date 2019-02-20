@@ -42,8 +42,11 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="BaseTypes.fs" />
+    <Compile Include="BaseApplicabilityRules.fs" />
     <Compile Include="XmlToolKit.fs" />
-    <Compile Include="SystemInfo.fs" />
+    <Compile Include="Processor.fs" />
+    <Compile Include="WindowsVersion.fs" />
     <Compile Include="Wmi.fs" />
     <Compile Include="sdp.fs" />
     <Content Include="packages.config" />

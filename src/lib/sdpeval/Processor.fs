@@ -3,6 +3,7 @@
 module SystemInfo =
 
     open System
+    open sdpeval.BaseTypes
     open spdeval.csharp
 
     let systemInfo = 
@@ -16,12 +17,6 @@ module SystemInfo =
 
     let processorRevision =
         systemInfo.wProcessorRevision
-
-    let toUInt16 (value:string) =
-        System.Convert.ToUInt16(value)
-
-    let toInt16 (value:string) =
-        System.Convert.ToInt16(value)
 
     let isProcessor architecture level revision =
         

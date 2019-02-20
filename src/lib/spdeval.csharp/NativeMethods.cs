@@ -38,5 +38,31 @@ namespace spdeval.csharp
             GetNativeSystemInfo(out var systemInfo);
             return systemInfo;
         }
+
+        public struct OsVersionInfoEx
+        {
+            public uint dwOSVersionInfoSize;
+            public uint dwMajorVersion;
+            public uint dwMinorVersion;
+            public uint dwBuildNumber;
+            public uint dwPlatformId;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string szCSDVersion;
+            public ushort wServicePackMajor;
+            public ushort wServicePackMinor;
+            public ushort wSuiteMask;
+            public byte wProductType;
+            public byte wReserved;
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern int GetVersionEx([MarshalAs(UnmanagedType.Struct)] ref OsVersionInfoEx lpVersionInfo);
+
+        public static OsVersionInfoEx GetVersion()
+        {
+            var osVersionInfoEx = default(OsVersionInfoEx);
+            GetVersionEx(ref osVersionInfoEx);
+            return osVersionInfoEx;
+        }
     }
 }
