@@ -44,17 +44,24 @@ module sdp =
         let level = (getAttribute xElement "Level" (fun _ -> null))
         let revision = (getAttribute xElement "Revision" (fun _ -> null))                
         Processor {Architecture=architecture;Level=level;Revision=revision}
+    
+    let toOption value =
+        match value with
+        |null -> None
+        |v -> Some v
+        
+
 
     let toWindowsVersion xElement =
         let comparison =  (getAttribute xElement "Comparison" (fun _ -> "EqualTo"))
-        let majorVersion =  (getAttribute xElement "MajorVersion" (fun _ -> null))
-        let minorVersion =  (getAttribute xElement "MinorVersion" (fun _ -> null))
-        let buildNumber =  (getAttribute xElement "BuildNumber" (fun _ -> null))
-        let servicePackMajor =  (getAttribute xElement "ServicePackMajor" (fun _ -> null))
-        let servicePackMinor =  (getAttribute xElement "ServicePackMinor" (fun _ -> null))
-        let allSuitesMustBePresent =  (getAttribute xElement "AllSuitesMustBePresent" (fun _ -> "false"))
-        let suiteMask =  (getAttribute xElement "SuiteMask" (fun _ -> null))
-        let productType =  (getAttribute xElement "ProductType" (fun _ -> null))
+        let majorVersion =  toOption (getAttribute xElement "MajorVersion" (fun _ -> null))
+        let minorVersion =  toOption (getAttribute xElement "MinorVersion" (fun _ -> null))
+        let buildNumber =  toOption (getAttribute xElement "BuildNumber" (fun _ -> null))
+        let servicePackMajor =  toOption (getAttribute xElement "ServicePackMajor" (fun _ -> null))
+        let servicePackMinor =  toOption (getAttribute xElement "ServicePackMinor" (fun _ -> null))
+        let allSuitesMustBePresent =  toOption (getAttribute xElement "AllSuitesMustBePresent" (fun _ -> "false"))
+        let suiteMask =  toOption (getAttribute xElement "SuiteMask" (fun _ -> null))
+        let productType =  toOption (getAttribute xElement "ProductType" (fun _ -> null))
         WindowsVersion {Comparison=comparison;MajorVersion=majorVersion;MinorVersion=minorVersion;BuildNumber=buildNumber;ServicePackMajor=servicePackMajor;ServicePackMinor=servicePackMinor;AllSuitesMustBePresent=allSuitesMustBePresent;SuiteMask=suiteMask;ProductType=productType}
      
     let rec sdpXmlToApplicabilityRules (applicabilityXml:string) =

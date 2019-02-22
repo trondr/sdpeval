@@ -58,7 +58,7 @@ namespace spdeval.csharp
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern int GetVersionEx([MarshalAs(UnmanagedType.Struct)] ref OsVersionInfoEx lpVersionInfo);
 
-        public static OsVersionInfoEx GetVersion()
+        public static OsVersionInfoEx GetOsVersion()
         {
             var osVersionInfoEx = default(OsVersionInfoEx);
             GetVersionEx(ref osVersionInfoEx);

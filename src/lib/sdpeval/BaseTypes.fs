@@ -18,6 +18,9 @@ module BaseTypes=
     let toBoolean (value:string) =
         System.Convert.ToBoolean(value)
 
+    let toByte (value:string) =
+        System.Convert.ToByte(value)
+
     type ScalarComparison =
         |LessThan
         |LessThanOrEqualTo
