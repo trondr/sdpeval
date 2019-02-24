@@ -41,6 +41,6 @@ module FileVersionTest =
     [<Test>]
     [<TestCaseSource("currentFileVersionTestData")>]
     let isFileVersionTests(testData:TestData) = 
-        let actual = sdpeval.FileVersion.isFileVersion testData.CurrentFileVersion testData.FileVersion
+        let actual = sdpeval.FileVersion.isFileVersionBase testData.CurrentFileVersion testData.FileVersion
         Assert.AreEqual(testData.Expected,actual,(sprintf "'%A' Not %s  '%A'" testData.CurrentFileVersion testData.FileVersion.Comparison testData.FileVersion))
         ()

@@ -42,6 +42,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="F.fs" />
     <Compile Include="BaseTypes.fs" />
     <Compile Include="BaseApplicabilityRules.fs" />
     <Compile Include="XmlToolKit.fs" />

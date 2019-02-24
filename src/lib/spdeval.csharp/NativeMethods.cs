@@ -61,6 +61,7 @@ namespace spdeval.csharp
         public static OsVersionInfoEx GetOsVersion()
         {
             var osVersionInfoEx = default(OsVersionInfoEx);
+            osVersionInfoEx.dwOSVersionInfoSize = (uint)Marshal.SizeOf((object)osVersionInfoEx);
             GetVersionEx(ref osVersionInfoEx);
             return osVersionInfoEx;
         }

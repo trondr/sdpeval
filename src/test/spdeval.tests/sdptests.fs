@@ -1,16 +1,42 @@
 ﻿namespace spdeval.tests
 
+open NUnit.Framework
 
+
+[<TestFixture>]
 module sdptest =
     open NUnit.Framework
     open sdpeval.sdp
+    open sdpeval.F
 
     [<Test>]
-    [<TestCase("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\V2\\00004850-0000-0000-5350-000000065821.sdp")>]
-    let loadsdpTest (fileName) =
-        let actual = loadsdp fileName
-        Assert.IsNotNull(actual.Description)
-        printf "%s" actual.IsInstallable
+    [<TestCase("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\V2")>]
+    let loadsdpTest (folderWithSdpFiles) =
+        let sdpfiles = getFiles "*.sdp" folderWithSdpFiles 
+        
+        sdpfiles
+        |> Array.map(fun f ->                 
+                let actual = loadsdp f
+                Assert.IsNotNull(actual.Description)
+                printfn "IsInstallable: %A" actual.IsInstallable
+                let isInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules actual.IsInstallable
+                printfn "IsInstallable: %A" (sdpeval.sdp.evaluateApplicabilityRule isInstallableRules)
+                
+                actual.InstallableItems
+                |> Seq.map(fun ii ->                         
+                        printfn "IsInstalledApplicabilityRule:%A  %A" ii.Id ii.IsInstalledApplicabilityRule
+                        let isInstalledRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstalledApplicabilityRule
+                        printfn "IsInstalled: %A" (sdpeval.sdp.evaluateApplicabilityRule isInstalledRules)
+
+                        printfn "IsInstallableApplicabilityRule:%A  %A" ii.Id ii.IsInstalledApplicabilityRule
+                        let IsInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstallableApplicabilityRule
+                        printfn "IsInstallable: %A" (sdpeval.sdp.evaluateApplicabilityRule IsInstallableRules)
+                    ) 
+                |>Seq.toArray
+                |>ignore
+                
+            ) |> ignore
+        
         ()
     
     [<Test>]

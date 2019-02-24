@@ -120,6 +120,23 @@ module WindowsVersion =
             |None -> true
             |Some p -> 
                 (currentProuctType = p)
+    
+    let optionToNumber  option defaultNumber number =
+        match option with
+        |Some n -> number
+        |None -> defaultNumber
+
+    let toComparableOsVersion (osVersion:OsVersion) (windowsVersion:WindowsVersion) = 
+        {
+            OsVersion.MajorVersion = optionToNumber windowsVersion.MajorVersion 0u osVersion.MajorVersion;
+            OsVersion.MinorVersion = optionToNumber windowsVersion.MinorVersion 0u osVersion.MinorVersion;
+            OsVersion.BuildNumber = optionToNumber windowsVersion.BuildNumber 0u osVersion.BuildNumber;
+            OsVersion.ServicePackMajor = optionToNumber windowsVersion.ServicePackMajor 0us osVersion.ServicePackMajor;
+            OsVersion.ServicePackMinor = optionToNumber windowsVersion.ServicePackMinor 0us osVersion.ServicePackMinor;
+            OsVersion.SuiteMask = optionToNumber windowsVersion.SuiteMask 0us osVersion.SuiteMask;
+            OsVersion.ProductType = optionToNumber windowsVersion.ProductType 0us osVersion.ProductType;
+        }
+        
 
     let isWindowsVersion (currentWindowsVersion:OsVersion) (windowsVersion:WindowsVersion) =
         
@@ -130,17 +147,18 @@ module WindowsVersion =
             raise (new Exception("Invalid WindowsVersion definition in SDP.xml. At least one of the attributes must be set: MajorVersion,MinorVersion,BuildNumber,ServicePackMajor,ServicePackMinor,SuiteMask,ProductType"))
         
         let comparison = BaseTypes.toScalarComparison windowsVersion.Comparison
-                
-        let currentVersionNumber = versionToNumber (osVersionToVersion currentWindowsVersion)
+               
+        let comparableCurrentWindowsVersion = toComparableOsVersion currentWindowsVersion windowsVersion
+
+        let currentVersionNumber = versionToNumber (osVersionToVersion comparableCurrentWindowsVersion)
         let windowsVersionNumber = versionToNumber (toVersion windowsVersion)
 
         let isVersionMatch = BaseTypes.compareScalar comparison currentVersionNumber windowsVersionNumber
 
         let suiteMask = toSuiteMask windowsVersion
         let isSuiteMaskMatch = 
-            isSuiteMaskMatch suiteMask.AllSuitesMustBePresent currentWindowsVersion.SuiteMask suiteMask.SuiteMask
+            isSuiteMaskMatch suiteMask.AllSuitesMustBePresent comparableCurrentWindowsVersion.SuiteMask suiteMask.SuiteMask
 
         let isProductTypeMatch =
-            isProductTypeMatch currentWindowsVersion.ProductType suiteMask.ProductType
-
+            isProductTypeMatch comparableCurrentWindowsVersion.ProductType suiteMask.ProductType        
         (isVersionMatch && isSuiteMaskMatch && isProductTypeMatch)

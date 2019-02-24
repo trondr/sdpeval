@@ -47,6 +47,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="sdptests.fs" />
     <Compile Include="WindowsVersionTest.fs" />
+    <Compile Include="FileVersionTest.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

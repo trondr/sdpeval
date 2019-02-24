@@ -56,11 +56,17 @@ module FileVersion =
         let number = new BigInteger(byteArray|>Array.rev)
         number
 
-    let isFileVersion (currentFileVersion:FileVersion) (fileVersion:FileVersion) =
+    let isFileVersionBase (currentFileVersion:FileVersion) (fileVersion:FileVersion) =
         let currentVersionNumber = versionToNumber (toFourPartVersion currentFileVersion.Version)
         let versionNumber = versionToNumber (toFourPartVersion fileVersion.Version)
         let comparison = BaseTypes.toScalarComparison fileVersion.Comparison
         BaseTypes.compareScalar comparison currentVersionNumber versionNumber
 
-    
+    let isFileVersion fileVersion = 
+        let path = getPath fileVersion
+        match (sdpeval.F.fileExists path) with
+        |true -> 
+            let currentFileVersion = getCurrentFileVersion fileVersion
+            isFileVersionBase currentFileVersion fileVersion
+        |false -> false
 

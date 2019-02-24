@@ -87,11 +87,19 @@ module sdp =
         |"WindowsVersion" -> (toWindowsVersion xElement)
         |"FileVersion" -> (toFileVersion xElement) 
         |"And" -> 
-            And (xElement.Descendants()
-            |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString()))))
+            And (
+                xElement.Elements()
+                |>Seq.map (fun x -> (                                        
+                                        sdpXmlToApplicabilityRules (x.ToString()))
+                            )
+                |>Seq.toArray
+                )
         |"Or" -> 
-            Or (xElement.Descendants()
-            |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString()))))
+            Or (    
+                xElement.Elements()
+                |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString())))
+                |>Seq.toArray 
+                )
         |"Not" -> 
             Not (sdpXmlToApplicabilityRules ((xElement.Descendants()|>Seq.head).ToString()))
         |_ -> raise (new NotSupportedException(sprintf "Applicability rule for '%s' is not implemented." xElement.Name.LocalName))
@@ -109,7 +117,5 @@ module sdp =
         |WmiQuery wq -> (wmiQueryIsMatch wq.NameSpace wq.WqlQuery)
         |Processor p -> (isProcessor p.Architecture p.Level p.Revision)
         |WindowsVersion w -> (isWindowsVersion WindowsVersion.currentWindowsVersion w)
-        |FileVersion fv -> 
-            let currentFileVersion = sdpeval.FileVersion.getCurrentFileVersion fv
-            (sdpeval.FileVersion.isFileVersion currentFileVersion fv)
+        |FileVersion fv -> (sdpeval.FileVersion.isFileVersion fv)
     
