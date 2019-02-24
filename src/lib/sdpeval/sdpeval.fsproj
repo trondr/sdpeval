@@ -47,6 +47,7 @@
     <Compile Include="XmlToolKit.fs" />
     <Compile Include="Processor.fs" />
     <Compile Include="WindowsVersion.fs" />
+    <Compile Include="FileVersion.fs" />
     <Compile Include="Wmi.fs" />
     <Compile Include="sdp.fs" />
     <Content Include="packages.config" />

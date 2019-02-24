@@ -35,7 +35,16 @@ module BaseTypes=
         |"EqualTo" -> ScalarComparison.EqualTo
         |"GreaterThanOrEqualTo" -> ScalarComparison.GreaterThanOrEqualTo
         |"GreaterThan" -> ScalarComparison.GreaterThan
-        |_ -> raise(new Exception("Unknow scalar comparison operator: " + comparison))
+        |_ -> raise(new Exception(sprintf "Unknow scalar comparison operator: %A" comparison))
+
+    let toScalarComparisonString comparison =
+        match comparison with
+        |ScalarComparison.LessThan -> "LessThan"
+        |ScalarComparison.LessThanOrEqualTo -> "LessThanOrEqualTo"
+        |ScalarComparison.EqualTo -> "EqualTo"
+        |ScalarComparison.GreaterThanOrEqualTo -> "GreaterThanOrEqualTo"
+        |ScalarComparison.GreaterThan -> "GreaterThan"
+        |_ -> raise(new Exception(sprintf "Unknow scalar comparison operator: %A" comparison))
 
     let compareScalar compareToken value1 value2 = 
         match compareToken with

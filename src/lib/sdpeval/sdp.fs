@@ -25,12 +25,13 @@ module sdp =
         |WmiQuery of WmiQuery
         |Processor of Processor
         |WindowsVersion of WindowsVersion
+        |FileVersion of FileVersion
 
     open sdpeval.Wmi 
     open sdpeval.SystemInfo
     open sdpeval.WindowsVersion
     open System.Xml.Linq
-    open System.Xml
+    open System.Xml    
 
     let getAttribute (xElement:XElement) (attributeName:string) defaultValue =
         let attributeValue = xElement.Attribute(XName.Get(attributeName))
@@ -50,8 +51,6 @@ module sdp =
         |null -> None
         |v -> Some v
         
-
-
     let toWindowsVersion xElement =
         let comparison =  (getAttribute xElement "Comparison" (fun _ -> "EqualTo"))
         let majorVersion =  toOption (getAttribute xElement "MajorVersion" (fun _ -> null))
@@ -63,7 +62,15 @@ module sdp =
         let suiteMask =  toOption (getAttribute xElement "SuiteMask" (fun _ -> null))
         let productType =  toOption (getAttribute xElement "ProductType" (fun _ -> null))
         WindowsVersion {Comparison=comparison;MajorVersion=majorVersion;MinorVersion=minorVersion;BuildNumber=buildNumber;ServicePackMajor=servicePackMajor;ServicePackMinor=servicePackMinor;AllSuitesMustBePresent=allSuitesMustBePresent;SuiteMask=suiteMask;ProductType=productType}
-     
+    
+    let toFileVersion xElement = 
+        let comparison =  (getAttribute xElement "Comparison" (fun _ -> raise (new Exception(sprintf "'Comparison' attribute not specified for FileVersion applicability rule: %A" xElement))))
+        let csidl =  toOption (getAttribute xElement "Csidl" (fun _ -> null))
+        let path =  (getAttribute xElement "Path" (fun _ -> raise (new Exception(sprintf "'Path' attribute not specified for FileVersion applicability rule: %A" xElement))))
+        let version =  (getAttribute xElement "Version" (fun _ -> raise (new Exception(sprintf "'Version' attribute not specified for FileVersion applicability rule: %A" xElement))))
+        ()
+        FileVersion {Csidl=csidl;Path=path;Comparison=comparison;Version=version}
+
     let rec sdpXmlToApplicabilityRules (applicabilityXml:string) =
         let nameTable = new NameTable()
         let namespaceManager = new XmlNamespaceManager(nameTable);
@@ -78,6 +85,7 @@ module sdp =
         |"WmiQuery" -> WmiQuery{NameSpace=(getAttribute xElement "Namespace" (fun _ -> ""));WqlQuery=(getAttribute xElement "WqlQuery" (fun _ -> ""))}
         |"Processor" -> (toProcessor xElement)
         |"WindowsVersion" -> (toWindowsVersion xElement)
+        |"FileVersion" -> (toFileVersion xElement) 
         |"And" -> 
             And (xElement.Descendants()
             |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString()))))
@@ -101,4 +109,7 @@ module sdp =
         |WmiQuery wq -> (wmiQueryIsMatch wq.NameSpace wq.WqlQuery)
         |Processor p -> (isProcessor p.Architecture p.Level p.Revision)
         |WindowsVersion w -> (isWindowsVersion WindowsVersion.currentWindowsVersion w)
+        |FileVersion fv -> 
+            let currentFileVersion = sdpeval.FileVersion.getCurrentFileVersion fv
+            (sdpeval.FileVersion.isFileVersion currentFileVersion fv)
     
