@@ -3,9 +3,8 @@
 module sdp =
     
     open Microsoft.UpdateServices.Administration    
-    open System
-    open BaseTypes
-    open BaseApplicabilityRules
+    open System    
+    open sdpeval.BaseApplicabilityRules
         
     /// <summary>
     /// Load SoftwareDistributionPackage.
@@ -26,12 +25,15 @@ module sdp =
         |Processor of Processor
         |WindowsVersion of WindowsVersion
         |FileVersion of FileVersion
+        |RegSz of RegSz
 
     open sdpeval.Wmi 
     open sdpeval.SystemInfo
     open sdpeval.WindowsVersion
     open System.Xml.Linq
     open System.Xml    
+    open sdpeval.charp
+    open System.ComponentModel
 
     let getAttribute (xElement:XElement) (attributeName:string) defaultValue =
         let attributeValue = xElement.Attribute(XName.Get(attributeName))
@@ -44,7 +46,7 @@ module sdp =
         let architecture = (getAttribute xElement "Architecture" (fun _ -> null))
         let level = (getAttribute xElement "Level" (fun _ -> null))
         let revision = (getAttribute xElement "Revision" (fun _ -> null))                
-        Processor {Architecture=architecture;Level=level;Revision=revision}
+        ApplicabilityRule.Processor {Architecture=architecture;Level=level;Revision=revision}
     
     let toOption value =
         match value with
@@ -61,17 +63,25 @@ module sdp =
         let allSuitesMustBePresent =  toOption (getAttribute xElement "AllSuitesMustBePresent" (fun _ -> "false"))
         let suiteMask =  toOption (getAttribute xElement "SuiteMask" (fun _ -> null))
         let productType =  toOption (getAttribute xElement "ProductType" (fun _ -> null))
-        WindowsVersion {Comparison=comparison;MajorVersion=majorVersion;MinorVersion=minorVersion;BuildNumber=buildNumber;ServicePackMajor=servicePackMajor;ServicePackMinor=servicePackMinor;AllSuitesMustBePresent=allSuitesMustBePresent;SuiteMask=suiteMask;ProductType=productType}
+        ApplicabilityRule.WindowsVersion {Comparison=comparison;MajorVersion=majorVersion;MinorVersion=minorVersion;BuildNumber=buildNumber;ServicePackMajor=servicePackMajor;ServicePackMinor=servicePackMinor;AllSuitesMustBePresent=allSuitesMustBePresent;SuiteMask=suiteMask;ProductType=productType}
     
     let toFileVersion xElement = 
         let comparison =  (getAttribute xElement "Comparison" (fun _ -> raise (new Exception(sprintf "'Comparison' attribute not specified for FileVersion applicability rule: %A" xElement))))
         let csidl =  toOption (getAttribute xElement "Csidl" (fun _ -> null))
         let path =  (getAttribute xElement "Path" (fun _ -> raise (new Exception(sprintf "'Path' attribute not specified for FileVersion applicability rule: %A" xElement))))
         let version =  (getAttribute xElement "Version" (fun _ -> raise (new Exception(sprintf "'Version' attribute not specified for FileVersion applicability rule: %A" xElement))))
-        ()
-        FileVersion {Csidl=csidl;Path=path;Comparison=comparison;Version=version}
+        ApplicabilityRule.FileVersion {Csidl=csidl;Path=path;Comparison=comparison;Version=version}
 
-    let rec sdpXmlToApplicabilityRules (applicabilityXml:string) =
+    let toRegSz xElement = 
+        let comparison =  (getAttribute xElement "Comparison" (fun _ -> raise (new Exception(sprintf "'Comparison' attribute not specified for RegSz applicability rule: %A" xElement))))
+        let key =  (getAttribute xElement "Key" (fun _ -> raise (new Exception(sprintf "'Key' attribute not specified for RegSz applicability rule: %A" xElement))))
+        let subkey =  (getAttribute xElement "Subkey" (fun _ -> raise (new Exception(sprintf "'Subkey' attribute not specified for RegSz applicability rule: %A" xElement))))
+        let value =  (getAttribute xElement "Value" (fun _ -> raise (new Exception(sprintf "'Value' attribute not specified for RegSz applicability rule: %A" xElement))))
+        let data =  (getAttribute xElement "Data" (fun _ -> raise (new Exception(sprintf "'Data' attribute not specified for RegSz applicability rule: %A" xElement))))
+        let regType32 =  toOption (getAttribute xElement "RegType32" (fun _ -> "false"))        
+        ApplicabilityRule.RegSz {Comparison=comparison;Key=key;Subkey=subkey;RegType32=regType32;Value=value;Data=data}
+
+    let rec sdpXmlToApplicabilityRules (applicabilityXml:string) :ApplicabilityRule =
         let nameTable = new NameTable()
         let namespaceManager = new XmlNamespaceManager(nameTable);
         namespaceManager.AddNamespace("lar","http://schemas.microsoft.com/wsus/2005/04/CorporatePublishing/LogicalApplicabilityRules.xsd")
@@ -80,14 +90,15 @@ module sdp =
         use xmlReader = new XmlTextReader(applicabilityXml,XmlNodeType.Element,xmlParserContext)
         let xElement = XElement.Load(xmlReader)
         match xElement.Name.LocalName with
-        |"True" -> True
-        |"False" -> False
-        |"WmiQuery" -> WmiQuery{NameSpace=(getAttribute xElement "Namespace" (fun _ -> ""));WqlQuery=(getAttribute xElement "WqlQuery" (fun _ -> ""))}
+        |"True" -> ApplicabilityRule.True
+        |"False" -> ApplicabilityRule.False
+        |"WmiQuery" -> ApplicabilityRule.WmiQuery{NameSpace=(getAttribute xElement "Namespace" (fun _ -> ""));WqlQuery=(getAttribute xElement "WqlQuery" (fun _ -> ""))}
         |"Processor" -> (toProcessor xElement)
         |"WindowsVersion" -> (toWindowsVersion xElement)
-        |"FileVersion" -> (toFileVersion xElement) 
+        |"FileVersion" -> (toFileVersion xElement)
+        //|"RegSz" -> (toRegSz xElement)
         |"And" -> 
-            And (
+            ApplicabilityRule.And (
                 xElement.Elements()
                 |>Seq.map (fun x -> (                                        
                                         sdpXmlToApplicabilityRules (x.ToString()))
@@ -95,13 +106,13 @@ module sdp =
                 |>Seq.toArray
                 )
         |"Or" -> 
-            Or (    
+            ApplicabilityRule.Or (    
                 xElement.Elements()
                 |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString())))
                 |>Seq.toArray 
                 )
         |"Not" -> 
-            Not (sdpXmlToApplicabilityRules ((xElement.Descendants()|>Seq.head).ToString()))
+            ApplicabilityRule.Not (sdpXmlToApplicabilityRules ((xElement.Descendants()|>Seq.head).ToString()))
         |_ -> raise (new NotSupportedException(sprintf "Applicability rule for '%s' is not implemented." xElement.Name.LocalName))
 
     let rec evaluateApplicabilityRule applicabilityRule =
@@ -118,4 +129,6 @@ module sdp =
         |Processor p -> (isProcessor p.Architecture p.Level p.Revision)
         |WindowsVersion w -> (isWindowsVersion WindowsVersion.currentWindowsVersion w)
         |FileVersion fv -> (sdpeval.FileVersion.isFileVersion fv)
+        |RegSz r -> 
+            raise (new NotImplementedException("RegSz"))            
     
