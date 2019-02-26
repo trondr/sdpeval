@@ -10,6 +10,7 @@ module sdptest =
     open sdpeval.F
 
     [<Test>]
+    [<Timeout(120000)>]
     [<TestCase("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\V2")>]
     let loadsdpTest (folderWithSdpFiles) =
         let sdpfiles = getFiles "*.sdp" folderWithSdpFiles 
@@ -17,20 +18,25 @@ module sdptest =
         sdpfiles
         |> Array.map(fun f ->                 
                 let actual = loadsdp f
-                Assert.IsNotNull(actual.Description)
-                printfn "IsInstallable: %A" actual.IsInstallable
-                let isInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules actual.IsInstallable
-                printfn "IsInstallable: %A" (sdpeval.sdp.evaluateApplicabilityRule isInstallableRules)
+                Assert.IsNotNull(actual.Description)                
+                //let isInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules actual.IsInstallable
+                //let isInstallable = (sdpeval.sdp.evaluateApplicabilityRule isInstallableRules)
+                //if(isInstallable) then                    
+                //    printfn "%s IsInstallable:%b Rule:%A" actual.Title isInstallable actual.IsInstallable
                 
                 actual.InstallableItems
-                |> Seq.map(fun ii ->                         
-                        printfn "IsInstalledApplicabilityRule:%A  %A" ii.Id ii.IsInstalledApplicabilityRule
-                        let isInstalledRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstalledApplicabilityRule
-                        printfn "IsInstalled: %A" (sdpeval.sdp.evaluateApplicabilityRule isInstalledRules)
+                |> Seq.map(fun ii ->                                                 
+                        let IsInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstallableApplicabilityRule                        
+                        let isInstallable = (sdpeval.sdp.evaluateApplicabilityRule IsInstallableRules)
+                        if(isInstallable) then                            
+                            //printf "%s IsInstallable: %b Rule:%A" actual.Title isInstallable ii.IsInstallableApplicabilityRule
+                            printf "%s (%A) IsInstallable: %b " actual.Title actual.CreationDate  isInstallable 
+                            let isInstalledRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstalledApplicabilityRule
+                            let isInstalled = (sdpeval.sdp.evaluateApplicabilityRule isInstalledRules)
+                            //if(isInstalled) then                            
+                            //printfn " IsInstalled:%b Rule:%A" isInstalled ii.IsInstalledApplicabilityRule
+                            printfn " IsInstalled:%b" isInstalled
 
-                        printfn "IsInstallableApplicabilityRule:%A  %A" ii.Id ii.IsInstalledApplicabilityRule
-                        let IsInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstallableApplicabilityRule
-                        printfn "IsInstallable: %A" (sdpeval.sdp.evaluateApplicabilityRule IsInstallableRules)
                     ) 
                 |>Seq.toArray
                 |>ignore
@@ -69,7 +75,7 @@ module sdptest =
     [<TestCase("<lar:And><bar:Processor Revision=\"-29174\"/></lar:And>",true,"This unit test might fail depending on the current processor revision.",false)>]
     [<TestCase("<lar:And><bar:Processor Architecture=\"9\" Level=\"6\" Revision=\"-29174\"/></lar:And>",true,"This unit test might fail depending on the current processor revision.",false)>]
 
-    [<TestCase("<lar:And><bar:WmiQuery Namespace=\"Root\cimv2\" WqlQuery=\"select * from Win32_ComputerSystem where (Manufacturer='Hewlett-Packard' and not (Model like '%Proliant%')) or (Manufacturer='HP') \" /><lar:Or><lar:And><bar:Processor Architecture=\"9\" /><bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" /><bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1803\" /></lar:And><lar:And><bar:Processor Architecture=\"9\" /><bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" /><bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1703\" /></lar:And><lar:And><bar:Processor Architecture=\"9\" /><bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" /><bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1709\" /></lar:And><lar:And><bar:Processor Architecture=\"9\" /><bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" /><bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\Current\\Version\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1607\" /></lar:And></lar:Or></lar:And>",true,"This unit test might fail depending on the current processor revision.",false)>]
+    [<TestCase("<lar:And><bar:WmiQuery Namespace=\"Root\cimv2\" WqlQuery=\"select * from Win32_ComputerSystem where (Manufacturer='Hewlett-Packard' and not (Model like '%Proliant%')) or (Manufacturer='HP') \" /><lar:Or><lar:And><bar:Processor Architecture=\"9\" /><bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" /><bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1803\" /></lar:And><lar:And><bar:Processor Architecture=\"9\" /><bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" /><bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1703\" /></lar:And><lar:And><bar:Processor Architecture=\"9\" /><bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" /><bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1709\" /></lar:And><lar:And><bar:Processor Architecture=\"9\" /><bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" /><bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\Current\\Version\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1607\" /></lar:And></lar:Or></lar:And>",true,"This unit test might fail depending on the current manufacturer, processor architecturer, windows version or release id read from registry.",false)>]
     
     let sdpXmlToApplicabilityRulesTests (xmlString,expectedEvaluation:bool,errorMessage:string,expectException:bool) =
         try

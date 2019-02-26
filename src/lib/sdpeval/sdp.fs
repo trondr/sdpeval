@@ -96,7 +96,7 @@ module sdp =
         |"Processor" -> (toProcessor xElement)
         |"WindowsVersion" -> (toWindowsVersion xElement)
         |"FileVersion" -> (toFileVersion xElement)
-        //|"RegSz" -> (toRegSz xElement)
+        |"RegSz" -> (toRegSz xElement)
         |"And" -> 
             ApplicabilityRule.And (
                 xElement.Elements()
@@ -129,6 +129,5 @@ module sdp =
         |Processor p -> (isProcessor p.Architecture p.Level p.Revision)
         |WindowsVersion w -> (isWindowsVersion WindowsVersion.currentWindowsVersion w)
         |FileVersion fv -> (sdpeval.FileVersion.isFileVersion fv)
-        |RegSz r -> 
-            raise (new NotImplementedException("RegSz"))            
+        |RegSz r -> sdpeval.RegistryOperations.isRegSz r
     

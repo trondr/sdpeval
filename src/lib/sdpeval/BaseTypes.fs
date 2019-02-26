@@ -44,7 +44,6 @@ module BaseTypes=
         |ScalarComparison.EqualTo -> "EqualTo"
         |ScalarComparison.GreaterThanOrEqualTo -> "GreaterThanOrEqualTo"
         |ScalarComparison.GreaterThan -> "GreaterThan"
-        |_ -> raise(new Exception(sprintf "Unknow scalar comparison operator: %A" comparison))
 
     let compareScalar compareToken value1 value2 = 
         match compareToken with
@@ -72,6 +71,13 @@ module BaseTypes=
         |"Contains" -> StringComparison.Contains
         |"EndsWith" -> StringComparison.EndsWith        
         |_ -> raise(new Exception("Unknow string comparison operator: " + comparison))
+
+    let toStringComparisonString comparison =
+        match comparison with
+        |StringComparison.EqualTo -> "EqualTo"
+        |StringComparison.BeginsWith -> "BeginsWith"        
+        |StringComparison.Contains -> "Contains"
+        |StringComparison.EndsWith -> "EndsWith"
 
     let compareString compareToken (string1:string) (string2:string) =
         match compareToken with
