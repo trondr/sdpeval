@@ -19,8 +19,8 @@ module sdptest =
         |> Array.map(fun f ->                 
                 let actual = loadsdp f
                 Assert.IsNotNull(actual.Description)                
-                //let isInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules actual.IsInstallable
-                //let isInstallable = (sdpeval.sdp.evaluateApplicabilityRule isInstallableRules)
+                let isInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules actual.IsInstallable
+                let isRootInstallable = (sdpeval.sdp.evaluateApplicabilityRule isInstallableRules)
                 //if(isInstallable) then                    
                 //    printfn "%s IsInstallable:%b Rule:%A" actual.Title isInstallable actual.IsInstallable
                 
@@ -30,7 +30,7 @@ module sdptest =
                         let isInstallable = (sdpeval.sdp.evaluateApplicabilityRule IsInstallableRules)
                         if(isInstallable) then                            
                             //printf "%s IsInstallable: %b Rule:%A" actual.Title isInstallable ii.IsInstallableApplicabilityRule
-                            printf "%s (%A) IsInstallable: %b " actual.Title actual.CreationDate  isInstallable 
+                            printf "%s (%A) IsInstallable: %b (%b)" actual.Title actual.CreationDate  isInstallable (isRootInstallable)
                             let isInstalledRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstalledApplicabilityRule
                             let isInstalled = (sdpeval.sdp.evaluateApplicabilityRule isInstalledRules)
                             //if(isInstalled) then                            
