@@ -4,17 +4,15 @@ nuget Fake.IO.FileSystem
 nuget Fake.DotNet.MSBuild
 nuget Fake.DotNet.Testing.Nunit
 nuget Fake.Testing.Common
+nuget Fake.DotNet.NuGet
 nuget Fake.IO.Zip
 nuget Fake.Core.Target //"
 #load "./.fake/build.fsx/intellisense.fsx"
 
 open Fake.IO
 open Fake.IO.Globbing.Operators //enables !! and globbing
-open Fake.DotNet
 open Fake.Core
-open Fake.Testing
 open Fake.DotNet.Testing
-
 
 //Properties
 let buildFolder = System.IO.Path.GetFullPath("./build/")
@@ -22,11 +20,24 @@ let buildLibFolder = buildFolder + "lib"
 let buildTestFolder = buildFolder + "test"
 let artifactFolder = System.IO.Path.GetFullPath("./artifact/")
 let artifactAppFolder = artifactFolder + "app"
-let globalPackagesFolder = 
+
+let globalPackagesFolder =     
     System.Environment.ExpandEnvironmentVariables("%userprofile%\.nuget\packages")
 
 let getVersion file = 
     System.Reflection.AssemblyName.GetAssemblyName(file).Version.ToString()
+
+let nuspecTemplate () =
+    !! "src/lib/**/sdpeval.nuspec"
+    |> Seq.head
+
+let nuspecTarget =
+    System.IO.Path.Combine(buildLibFolder,"sdpeval.nuspec")    
+
+let copyPackFiles () =
+    !! "build/lib/**/sdpeval.dll"
+    ++ "build/lib/**/sdpeval.pdb"
+    |> Shell.copy "Nuget"        
 
 //Targets
 Target.create "Clean" (fun _ ->
@@ -37,14 +48,14 @@ Target.create "Clean" (fun _ ->
 Target.create "BuildLib" (fun _ -> 
     Trace.trace "Building lib..."
     !! "src/lib/**/*.fsproj"
-        |> MSBuild.runRelease id buildLibFolder "Build"
+        |> Fake.DotNet.MSBuild.runRelease id buildLibFolder "Build"
         |> Trace.logItems "BuildApp-Output: "
 )
 
 Target.create "BuildTest" (fun _ -> 
     Trace.trace "Building test..."
     !! "src/test/**/*.fsproj"
-        |> MSBuild.runRelease id buildTestFolder "Build"
+        |> Fake.DotNet.MSBuild.runRelease id buildTestFolder "Build"
         |> Trace.logItems "BuildTest-Output: "
 )
 
@@ -64,6 +75,18 @@ Target.create "Test" (fun _ ->
     !! ("build/test/**/*.Tests.dll")    
     |> NUnit3.run (fun p ->
         {p with ToolPath = nunitConsoleRunner();Where = "cat==UnitTests";TraceLevel=NUnit3.NUnit3TraceLevel.Verbose})
+)
+
+let setNugetParameters (nugetParams:Fake.DotNet.NuGet.NuGet.NuGetParams) =
+    let nparams = {nugetParams with Authors=["github.com/trondr"];Version="1.0.0.0";Description="Evaluatessss WSUS Software Distribution Package applicability rules as defined in WSUS schema reference https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb972752(v=vs.85)";Project="https://github.com/trondr/sdpeval"}
+    printfn "NuGet Paramaters: %A" nparams
+    nparams
+
+Target.create "CreateNugetPackage" (fun _ ->
+    Trace.trace "Creating nuget package..."
+    copyPackFiles ()
+    System.IO.File.Copy(nuspecTemplate(),nuspecTarget,true)
+    Fake.DotNet.NuGet.NuGet.NuGetPack setNugetParameters nuspecTarget //@"C:\Dev\github.trondr\sdpeval\src\lib\sdpeval\sdpeval.fsproj"
 )
 
 Target.create "Publish" (fun _ ->
@@ -91,6 +114,7 @@ open Fake.Core.TargetOperators
     ==> "BuildLib"
     ==> "BuildTest"
     ==> "Test"
+    ==> "CreateNugetPackage"
     ==> "Publish"
     ==> "Default"
 

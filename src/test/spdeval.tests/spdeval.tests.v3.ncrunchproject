@@ -4,6 +4,18 @@
       <NamedTestSelector>
         <TestName>spdeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
       </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
+      </NamedTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>sdpeval.tests.FileVersionTest</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>sdpeval.tests.sdptest</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>sdpeval.tests.WindowsVersionTest</FixtureName>
+      </FixtureTestSelector>
     </IgnoredTests>
   </Settings>
 </ProjectConfiguration>

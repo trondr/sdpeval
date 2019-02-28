@@ -8,9 +8,9 @@ open System.Runtime.InteropServices
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [<assembly: AssemblyTitle("sdpeval")>]
-[<assembly: AssemblyDescription("")>]
+[<assembly: AssemblyDescription("Evaluate WSUS Software Distribution Package applicability rules as defined in WSUS schema reference https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb972752(v=vs.85)")>]
 [<assembly: AssemblyConfiguration("")>]
-[<assembly: AssemblyCompany("")>]
+[<assembly: AssemblyCompany("github/trondr")>]
 [<assembly: AssemblyProduct("sdpeval")>]
 [<assembly: AssemblyCopyright("Copyright © github/trondr 2019")>]
 [<assembly: AssemblyTrademark("")>]
