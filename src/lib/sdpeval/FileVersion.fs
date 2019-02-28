@@ -4,7 +4,7 @@ module FileVersion =
     open System
     open BaseApplicabilityRules
     open sdpeval.BaseTypes
-    open spdeval.csharp
+    open sdpeval.NativeMethods
     open System.Diagnostics
 
     let getFileVersion filePath =
@@ -13,7 +13,7 @@ module FileVersion =
     let getPath (fileVersion:FileVersion) =
         match fileVersion.Csidl with
             |Some csidl-> 
-                let parentFolder = FileSystemNativeMethods.GetFolderPath(toInt32 csidl)
+                let parentFolder = getFolderPath (enum (toInt32 csidl))
                 System.IO.Path.Combine(parentFolder,fileVersion.Path)                
             |None ->
                 fileVersion.Path                

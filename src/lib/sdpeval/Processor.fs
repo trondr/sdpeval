@@ -4,10 +4,10 @@ module SystemInfo =
 
     open System
     open sdpeval.BaseTypes
-    open spdeval.csharp
+    open sdpeval.NativeMethods
 
     let systemInfo = 
-        NativeMethods.GetNativeSystemInfo()
+        getNativeSystemInfo()
 
     let processorArchitecture =
         systemInfo.wProcessorArchitecture

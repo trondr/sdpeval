@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Init.fs" />
+    <Compile Include="NativeMethodsTests.fs" />
     <Compile Include="sdptests.fs" />
     <Compile Include="WindowsVersionTest.fs" />
     <Compile Include="FileVersionTest.fs" />
@@ -73,11 +74,6 @@
     <ProjectReference Include="..\..\lib\sdpeval\sdpeval.fsproj">
       <Name>sdpeval</Name>
       <Project>{59f9fa7c-b4a9-422c-8c52-958bbd1c6688}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\lib\spdeval.csharp\spdeval.csharp.csproj">
-      <Name>spdeval.csharp</Name>
-      <Project>{2f6b30fd-e0ee-46ba-9cdc-25ccd258ec35}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

@@ -48,6 +48,7 @@
     <Compile Include="BaseApplicabilityRules.fs" />
     <Compile Include="XmlToolKit.fs" />
     <Compile Include="RegistryOperations.fs" />
+    <Compile Include="NativeMethods.fs" />
     <Compile Include="Processor.fs" />
     <Compile Include="WindowsVersion.fs" />
     <Compile Include="FileVersion.fs" />
@@ -81,13 +82,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.Serialization" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\spdeval.csharp\spdeval.csharp.csproj">
-      <Name>spdeval.csharp</Name>
-      <Project>{2f6b30fd-e0ee-46ba-9cdc-25ccd258ec35}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

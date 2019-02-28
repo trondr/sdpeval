@@ -7,8 +7,6 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sdpeval", "src\lib\sdpeval\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "spdeval.tests", "src\test\spdeval.tests\spdeval.tests.fsproj", "{EDAFC55B-EAA9-494D-9A39-D3A5BD3816B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spdeval.csharp", "src\lib\spdeval.csharp\spdeval.csharp.csproj", "{2F6B30FD-E0EE-46BA-9CDC-25CCD258EC35}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{EDAFC55B-EAA9-494D-9A39-D3A5BD3816B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDAFC55B-EAA9-494D-9A39-D3A5BD3816B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDAFC55B-EAA9-494D-9A39-D3A5BD3816B6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F6B30FD-E0EE-46BA-9CDC-25CCD258EC35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F6B30FD-E0EE-46BA-9CDC-25CCD258EC35}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F6B30FD-E0EE-46BA-9CDC-25CCD258EC35}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F6B30FD-E0EE-46BA-9CDC-25CCD258EC35}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

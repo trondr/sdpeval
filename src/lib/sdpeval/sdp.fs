@@ -32,8 +32,6 @@ module sdp =
     open sdpeval.WindowsVersion
     open System.Xml.Linq
     open System.Xml    
-    open sdpeval.charp
-    open System.ComponentModel
 
     let getAttribute (xElement:XElement) (attributeName:string) defaultValue =
         let attributeValue = xElement.Attribute(XName.Get(attributeName))

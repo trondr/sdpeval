@@ -5,7 +5,7 @@ module WindowsVersion =
     open System
     open BaseTypes
     open BaseApplicabilityRules
-    open spdeval.csharp    
+    open sdpeval.NativeMethods
     open System.Linq
 
     type OsVersion = 
@@ -30,7 +30,7 @@ module WindowsVersion =
     type SuitMask = {AllSuitesMustBePresent:bool;SuiteMask:UInt16 option;ProductType:UInt16 option}
 
     let currentWindowsVersion =
-        let osVersion = NativeMethods.GetOsVersion()
+        let osVersion = NativeMethods.getOsVersion()
         {
             MajorVersion = osVersion.dwMajorVersion;
             MinorVersion = osVersion.dwMinorVersion;
