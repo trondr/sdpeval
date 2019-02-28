@@ -39,6 +39,7 @@ module FileVersionTest =
 
         ]
     [<Test>]
+    [<Category(TestCategory.UnitTests)>]
     [<TestCaseSource("currentFileVersionTestData")>]
     let isFileVersionTests(testData:TestData) = 
         let actual = sdpeval.FileVersion.isFileVersionBase testData.CurrentFileVersion testData.FileVersion

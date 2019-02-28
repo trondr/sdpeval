@@ -45,6 +45,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Init.fs" />
     <Compile Include="sdptests.fs" />
     <Compile Include="WindowsVersionTest.fs" />
     <Compile Include="FileVersionTest.fs" />

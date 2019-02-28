@@ -1,4 +1,4 @@
-﻿namespace spdeval.tests
+﻿namespace sdpeval.tests
 
 open NUnit.Framework
 
@@ -8,8 +8,10 @@ module sdptest =
     open NUnit.Framework
     open sdpeval.sdp
     open sdpeval.F
+    open sdpeval.tests
 
     [<Test>]
+    [<Category(TestCategory.ManualTests)>]
     [<Timeout(120000)>]
     [<TestCase("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\V2")>]
     let loadsdpTest (folderWithSdpFiles) =
@@ -46,6 +48,7 @@ module sdptest =
         ()
     
     [<Test>]
+    [<Category(TestCategory.UnitTests)>]
     [<TestCase("<lar:And><lar:True /><lar:True /></lar:And>",true,"",false)>]
     [<TestCase("<lar:And><lar:False /><lar:True /></lar:And>",false,"",false)>]
     [<TestCase("<lar:And><lar:True /><lar:False /></lar:And>",false,"",false)>]

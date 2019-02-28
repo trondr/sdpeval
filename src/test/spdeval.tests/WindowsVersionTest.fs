@@ -1,4 +1,4 @@
-﻿namespace sdpeval.Tests
+﻿namespace sdpeval.tests
 
 open NUnit.Framework
 
@@ -7,6 +7,7 @@ module WindowsVersionTest =
     open sdpeval.WindowsVersion    
     open sdpeval.BaseApplicabilityRules
     open System.Numerics    
+    open sdpeval.tests
     
     let defaultCurrentWindowsVersion = {MajorVersion=0u;MinorVersion=0u;BuildNumber=0u;ServicePackMajor=0us;ServicePackMinor=0us;SuiteMask=0us;ProductType=0us}
     let defaultWindowsVersion = {Comparison = "EqualTo";MajorVersion=Some "6";MinorVersion=None;BuildNumber=None;ServicePackMajor=None;ServicePackMinor=None;AllSuitesMustBePresent=Some "false";SuiteMask=None;ProductType=None}
@@ -62,6 +63,7 @@ module WindowsVersionTest =
     
 
     [<Test>]
+    [<Category(TestCategory.UnitTests)>]
     [<TestCaseSource("currentWindowsVersionsTestData")>]
     let isWindowsVersionsTests(testData:TestData) = 
         let actual = isWindowsVersion testData.WEx testData.W 
@@ -82,12 +84,14 @@ module WindowsVersionTest =
         |]
 
     [<Test>]
+    [<Category(TestCategory.UnitTests)>]
     [<TestCaseSource("versionToNumberTestData")>]
     let versionToNumberTest (testData:VersionToNumberTestData) =
         let actual = versionToNumber testData.Version
         Assert.IsTrue(testData.Expected = actual,sprintf "%A <> %A" testData.Expected actual)
 
     [<Test>]
+    [<Category(TestCategory.UnitTests)>]
     [<TestCase(true,5us|||512us,5us,false)>]
     [<TestCase(true,5us|||512us,0us,false)>]
     [<TestCase(false,5us|||512us,5us,true)>]

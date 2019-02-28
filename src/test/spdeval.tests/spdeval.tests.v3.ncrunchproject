@@ -1,3 +1,9 @@
 ﻿<ProjectConfiguration>
-  <Settings />
+  <Settings>
+    <IgnoredTests>
+      <NamedTestSelector>
+        <TestName>spdeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
+      </NamedTestSelector>
+    </IgnoredTests>
+  </Settings>
 </ProjectConfiguration>
