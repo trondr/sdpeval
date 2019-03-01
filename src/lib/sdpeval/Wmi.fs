@@ -1,7 +1,7 @@
 ﻿
 namespace sdpeval
 
-module Wmi =
+module internal Wmi =
 
     open System.Management
 

@@ -1,6 +1,6 @@
 ﻿namespace sdpeval
 
-module BaseApplicabilityRules =
+module internal BaseApplicabilityRules =
     
     type WmiQuery = {NameSpace:string;WqlQuery:string}
     type Processor = {Architecture:string;Level:string;Revision:string}

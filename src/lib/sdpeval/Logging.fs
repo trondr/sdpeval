@@ -1,7 +1,7 @@
 ﻿
 namespace sdpeval
 
-module Logging=
+module internal Logging=
     
     open Common.Logging
 

@@ -1,6 +1,6 @@
 ﻿namespace sdpeval
 
-module FileVersion =
+module internal FileVersion =
     open System
     open BaseApplicabilityRules
     open sdpeval.BaseTypes

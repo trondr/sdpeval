@@ -1,6 +1,6 @@
 ﻿namespace sdpeval
 
-module BaseTypes=
+module internal BaseTypes=
     open System
 
     let toUInt16 (value:string) =

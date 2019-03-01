@@ -1,6 +1,6 @@
 ﻿namespace sdpeval
 
-module RegistryOperations =
+module internal RegistryOperations =
     open System
     open F    
     open Microsoft.Win32;

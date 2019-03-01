@@ -1,6 +1,6 @@
 ﻿namespace sdpeval
 
-module F =
+module internal F =
     open System
 
     let getFiles searchPattern folder =

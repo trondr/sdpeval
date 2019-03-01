@@ -1,6 +1,6 @@
 ﻿namespace sdpeval
 
-module NativeMethods =
+module internal NativeMethods =
     open System
     open System.Runtime.InteropServices    
     open System.Text

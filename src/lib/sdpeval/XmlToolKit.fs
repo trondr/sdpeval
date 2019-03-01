@@ -2,7 +2,7 @@
 
 //Source: https://nbevans.wordpress.com/2015/04/15/super-skinny-xml-document-generation-with-f/
 
-module XmlToolKit =
+module internal XmlToolKit =
     
     open System.Text
     open System.Xml

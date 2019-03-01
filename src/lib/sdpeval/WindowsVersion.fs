@@ -1,6 +1,6 @@
 ﻿namespace sdpeval
 
-module WindowsVersion =
+module internal WindowsVersion =
 
     open System
     open BaseTypes

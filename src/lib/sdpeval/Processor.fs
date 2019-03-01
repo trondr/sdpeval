@@ -1,6 +1,6 @@
 ﻿namespace sdpeval
 
-module SystemInfo =
+module internal SystemInfo =
 
     open System
     open sdpeval.BaseTypes

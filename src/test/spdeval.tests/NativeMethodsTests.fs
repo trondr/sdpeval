@@ -12,8 +12,8 @@ module NativeMethodsTests =
     [<TestCase(Csidl.CommonAppdata,@"C:\ProgramData")>]
     [<TestCase(Csidl.CommonMusic,@"\Music")>]
     [<TestCase(Csidl.CommonPrograms,@"C:\ProgramData\Microsoft\Windows\Start Menu\Programs")>]
-    let getFolderTests(csidlFolder,expectedPath) =
-        let actual = NativeMethods.getFolderPath csidlFolder
+    let getFolderTests(csidlFolder:obj,expectedPath) =
+        let actual = NativeMethods.getFolderPath (csidlFolder:?>Csidl)
         Assert.IsTrue(actual.Contains(expectedPath), sprintf "'%s' is not contained in '%s'" expectedPath actual)
 
     

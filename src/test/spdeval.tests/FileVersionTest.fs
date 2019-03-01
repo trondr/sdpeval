@@ -7,10 +7,10 @@ module FileVersionTest =
     open sdpeval.BaseApplicabilityRules
     open sdpeval.BaseTypes
         
-    let defaultFileVersion = {Csidl=Some "37";Path="drivers\\some.sys";Comparison="EqualTo";Version="1.0.0.0"}
-    type TestData ={CurrentFileVersion:FileVersion;FileVersion:FileVersion;Expected:bool}
+    let internal defaultFileVersion = {Csidl=Some "37";Path="drivers\\some.sys";Comparison="EqualTo";Version="1.0.0.0"}
+    type internal TestData ={CurrentFileVersion:FileVersion;FileVersion:FileVersion;Expected:bool}
 
-    let currentFileVersionTestData =
+    let internal currentFileVersionTestData =
         [
             yield {CurrentFileVersion={defaultFileVersion with Version = "1.0.0.0"};FileVersion={defaultFileVersion with Version="1.0.0.0";Comparison=(toScalarComparisonString ScalarComparison.EqualTo)};Expected=true}
             yield {CurrentFileVersion={defaultFileVersion with Version = "2.0.0.0"};FileVersion={defaultFileVersion with Version="1.0.0.0";Comparison=(toScalarComparisonString ScalarComparison.EqualTo)};Expected=false}
@@ -41,7 +41,8 @@ module FileVersionTest =
     [<Test>]
     [<Category(TestCategory.UnitTests)>]
     [<TestCaseSource("currentFileVersionTestData")>]
-    let isFileVersionTests(testData:TestData) = 
-        let actual = sdpeval.FileVersion.isFileVersionBase testData.CurrentFileVersion testData.FileVersion
-        Assert.AreEqual(testData.Expected,actual,(sprintf "'%A' Not %s  '%A'" testData.CurrentFileVersion testData.FileVersion.Comparison testData.FileVersion))
+    let isFileVersionTests(testData:obj) = 
+        let testDataR = (testData:?>TestData)
+        let actual = sdpeval.FileVersion.isFileVersionBase testDataR.CurrentFileVersion testDataR.FileVersion
+        Assert.AreEqual(testDataR.Expected,actual,(sprintf "'%A' Not %s  '%A'" testDataR.CurrentFileVersion testDataR.FileVersion.Comparison testDataR.FileVersion))
         ()

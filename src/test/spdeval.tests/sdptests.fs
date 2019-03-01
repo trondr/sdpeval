@@ -6,7 +6,7 @@ open NUnit.Framework
 [<TestFixture>]
 module sdptest =
     open NUnit.Framework
-    open sdpeval.sdp
+    open sdpeval.Sdp
     open sdpeval.F
     open sdpeval.tests
 
@@ -19,22 +19,22 @@ module sdptest =
         
         sdpfiles
         |> Array.map(fun f ->                 
-                let actual = loadsdp f
+                let actual = LoadSdp f
                 Assert.IsNotNull(actual.Description)                
-                let isInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules actual.IsInstallable
-                let isRootInstallable = (sdpeval.sdp.evaluateApplicabilityRule isInstallableRules)
+                let isInstallableRules = sdpeval.Sdp.sdpXmlToApplicabilityRules actual.IsInstallable
+                let isRootInstallable = (sdpeval.Sdp.evaluateApplicabilityRule isInstallableRules)
                 //if(isInstallable) then                    
                 //    printfn "%s IsInstallable:%b Rule:%A" actual.Title isInstallable actual.IsInstallable
                 
                 actual.InstallableItems
                 |> Seq.map(fun ii ->                                                 
-                        let IsInstallableRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstallableApplicabilityRule                        
-                        let isInstallable = (sdpeval.sdp.evaluateApplicabilityRule IsInstallableRules)
+                        let IsInstallableRules = sdpeval.Sdp.sdpXmlToApplicabilityRules ii.IsInstallableApplicabilityRule                        
+                        let isInstallable = (sdpeval.Sdp.evaluateApplicabilityRule IsInstallableRules)
                         if(isInstallable) then                            
                             //printf "%s IsInstallable: %b Rule:%A" actual.Title isInstallable ii.IsInstallableApplicabilityRule
                             printf "%s (%A) IsInstallable: %b (%b)" actual.Title actual.CreationDate  isInstallable (isRootInstallable)
-                            let isInstalledRules = sdpeval.sdp.sdpXmlToApplicabilityRules ii.IsInstalledApplicabilityRule
-                            let isInstalled = (sdpeval.sdp.evaluateApplicabilityRule isInstalledRules)
+                            let isInstalledRules = sdpeval.Sdp.sdpXmlToApplicabilityRules ii.IsInstalledApplicabilityRule
+                            let isInstalled = (sdpeval.Sdp.evaluateApplicabilityRule isInstalledRules)
                             //if(isInstalled) then                            
                             //printfn " IsInstalled:%b Rule:%A" isInstalled ii.IsInstalledApplicabilityRule
                             printfn " IsInstalled:%b" isInstalled
