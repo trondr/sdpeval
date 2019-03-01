@@ -1,6 +1,31 @@
 # sdpeval
 Evaluate WSUS Software Distribution Package applicability rules as defined in WSUS schema reference https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb972752(v=vs.85)
 
+## Requirements
+
+sdpeval dependes on Microsoft Update Services (Microsoft.UpdateServices.Administration.dll and xsd schemas)
+
+Update Services is installed as part of the RSAT Windows Feature included in Windows 10 1809 (requires download and install from microsoft.com for ealier operating systems).
+
+To use Microsoft.UpdateServices.Administration it is required that the registry key value [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Update Services\Server\Setup]TargetDir is defined indicating that Update Services is installed and set to the root of the update services installation. Default value is "%ProgramFiles%\Update Services\". It is required that the process is running in 64 bit process, otherwise it will attempt to access "c:\Program Files (x86)\Update Services" instead of the correct path "C:\Program Files\Update Services". The TargetDir value might be overriden for test purposes during development and set to the location of a copy of the update services installation (.\tools\Update Services). 
+
+Microsoft.UpdateServices.Administration is looking for the <TargetDir>\Schema directory containg the xsd schemas
+
+## Example
+
+### C#
+```csharp
+var sdp = sdpeval.Sdp.LoadSdp(@"C:\Temp\DriverToolCache\HpCatalogForSms.latest\V2\00004850-0000-0000-5350-000000094801.sdp");
+var isInstallable = sdpeval.Sdp.EvaluateApplicabilityXml(sdp.IsInstallable);
+Console.WriteLine($"isInstallable={isInstallable}");
+```
+### F#
+```fsharp
+let sdp = sdpeval.Sdp.LoadSdp(@"C:\Temp\DriverToolCache\HpCatalogForSms.latest\V2\00004850-0000-0000-5350-000000094801.sdp")
+let isInstallable = sdpeval.Sdp.EvaluateApplicabilityXml(sdp.IsInstallable)
+printfn "isInstallable=%b" isInstallable
+```
+
 ## Example sdp xml
 
 ``` xml
