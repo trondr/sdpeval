@@ -3,13 +3,11 @@ Evaluate WSUS Software Distribution Package applicability rules as defined in WS
 
 ## Requirements
 
-sdpeval dependes on Microsoft Update Services (Microsoft.UpdateServices.Administration.dll and xsd schemas)
+sdpeval dependes on Microsoft Update Services. More specifically Microsoft.UpdateServices.Administration.dll installed with sdpeval and Xsd schemas located in "%ProgramFiles%\Update Services\Schema".
 
 Update Services is installed as part of the RSAT Windows Feature included in Windows 10 1809 (requires download and install from microsoft.com for ealier operating systems).
 
 To use Microsoft.UpdateServices.Administration it is required that the registry key value [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Update Services\Server\Setup]TargetDir is defined indicating that Update Services is installed and set to the root of the update services installation. Default value is "%ProgramFiles%\Update Services\". It is required that the process is running in 64 bit process, otherwise it will attempt to access "c:\Program Files (x86)\Update Services" instead of the correct path "C:\Program Files\Update Services". The TargetDir value might be overriden for test purposes during development and set to the location of a copy of the update services installation (.\tools\Update Services). 
-
-Microsoft.UpdateServices.Administration is looking for the <TargetDir>\Schema directory containg the xsd schemas
 
 ## Example
 
