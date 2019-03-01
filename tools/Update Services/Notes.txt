@@ -1,4 +1,0 @@
-xsd SoftwareDistributionPackage.xsd BaseTypes.xsd LogicalApplicabilityRules.xsd BaseApplicabilityRules.xsd BaseApplicabilityRules.xsd patch_applicability.xsd MsiApplicabilityRules.xsd UpdateServicesPackage.xsd WindowsDriver.xsd CommandLineInstallation.xsd MsiInstallation.xsd MspInstallation.xsd /classes
-
-UpdateExeInstallation.xsd 
-TranslateSdpToSus.xslt
