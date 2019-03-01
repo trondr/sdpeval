@@ -37,6 +37,7 @@ let nuspecTarget =
 let copyPackFiles () =
     !! "build/lib/**/sdpeval.dll"
     ++ "build/lib/**/sdpeval.pdb"
+    ++ "build/lib/**/Microsoft.UpdateServices.Administration.dll"
     |> Shell.copy "Nuget"        
 
 //Targets
