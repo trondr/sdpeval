@@ -20,6 +20,7 @@ let buildLibFolder = buildFolder + "lib"
 let buildTestFolder = buildFolder + "test"
 let artifactFolder = System.IO.Path.GetFullPath("./artifact/")
 let artifactAppFolder = artifactFolder + "app"
+let nugetFolder = "./NuGet/"
 
 let globalPackagesFolder =     
     System.Environment.ExpandEnvironmentVariables("%userprofile%\.nuget\packages")
@@ -40,10 +41,17 @@ let copyPackFiles () =
     ++ "build/lib/**/Microsoft.UpdateServices.Administration.dll"
     |> Shell.copy "Nuget"        
 
+let sourceFiles () =
+    !! "src/**/*.*"
+    -- "**/bin/**"
+    -- "**/obj/**"
+    -- "**/test/**"
+    -- "**/.vs/**"
+
 //Targets
 Target.create "Clean" (fun _ ->
-    Trace.trace "Clean build folder..."
-    Shell.cleanDirs [ buildFolder; artifactFolder ]
+    Trace.trace "Clean folders..."
+    Shell.cleanDirs [ buildFolder; artifactFolder; nugetFolder ]
 )
 
 Target.create "BuildLib" (fun _ -> 
@@ -86,6 +94,7 @@ let setNugetParameters (nugetParams:Fake.DotNet.NuGet.NuGet.NuGetParams) =
 Target.create "CreateNugetPackage" (fun _ ->
     Trace.trace "Creating nuget package..."
     copyPackFiles ()
+    sourceFiles() |> Shell.copyFilesWithSubFolder "NuGet"
     System.IO.File.Copy(nuspecTemplate(),nuspecTarget,true)
     Fake.DotNet.NuGet.NuGet.NuGetPack setNugetParameters nuspecTarget //@"C:\Dev\github.trondr\sdpeval\src\lib\sdpeval\sdpeval.fsproj"
 )
