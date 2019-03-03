@@ -50,6 +50,7 @@
     <Compile Include="sdptests.fs" />
     <Compile Include="WindowsVersionTest.fs" />
     <Compile Include="FileVersionTest.fs" />
+    <Compile Include="RegSzTests.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

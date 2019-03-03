@@ -7,26 +7,38 @@ module internal RegistryOperations =
     open BaseApplicabilityRules
         
     let logger = Logging.getLoggerByName("RegistryOperations")
-    
-    let toRegHive regHiveName =
+
+    let toRegistryView isRegType32 =
+        match isRegType32 with
+        |true -> RegistryView.Registry32
+        |false -> RegistryView.Registry64
+
+    let toRegHive regHiveName isRegType32 =
+        let registryView = toRegistryView isRegType32        
         match regHiveName with
-        |"HKCU"|"HKEY_CURRENT_USER" -> Registry.CurrentUser
-        |"HKLM"|"HKEY_LOCAL_MACHINE" -> Registry.LocalMachine
-        |"HKCR"|"HKEY_CLASSES_ROOT" -> Registry.ClassesRoot        
-        |"HKCC"|"HKEY_CURRENT_CONFIG" -> Registry.CurrentConfig
-        |"HKU"|"HKEY_USERS" -> Registry.Users
+        |"HKCU"|"HKEY_CURRENT_USER" -> RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, registryView)
+        |"HKLM"|"HKEY_LOCAL_MACHINE" -> RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, registryView)
+        |"HKCR"|"HKEY_CLASSES_ROOT" -> RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, registryView)
+        |"HKCC"|"HKEY_CURRENT_CONFIG" -> RegistryKey.OpenBaseKey(RegistryHive.CurrentConfig, registryView)
+        |"HKU"|"HKEY_USERS" -> RegistryKey.OpenBaseKey(RegistryHive.Users, registryView)
         |_ -> raise (new Exception("Unknown registry hive: " + regHiveName))
 
-    let getRegistryValueUnsafe hiveName subKeyPath valueName =
-        let regHive = toRegHive hiveName
+    let getRegistryValueUnsafe hiveName subKeyPath valueName isRegType32 =
+        let regHive = toRegHive hiveName isRegType32
         let regKey = toOption (regHive.OpenSubKey(subKeyPath,false))
         match regKey with
         |Some k -> toOption (k.GetValue(valueName))
         |None -> None
 
-    let getRegistryValue hiveName subKeyPath valueName =
+    let toBoolean (value:string option) defaultValue =
+        match value with
+        |Some v -> Convert.ToBoolean(v)
+        |None -> defaultValue
+
+    let getRegistryValue hiveName subKeyPath valueName regType32 =
         try
-            getRegistryValueUnsafe hiveName subKeyPath valueName
+            let isRegType32 = toBoolean regType32 false
+            getRegistryValueUnsafe hiveName subKeyPath valueName isRegType32
         with
         |ex ->
             if(logger.IsDebugEnabled) then logger.Debug(sprintf "[%s\\%s]%s. Error: %s" hiveName subKeyPath valueName ex.Message)
@@ -42,7 +54,7 @@ module internal RegistryOperations =
         |None -> None
 
     let isRegSz (regsz:RegSz) =
-        let localData = toString (getRegistryValue regsz.Key regsz.Subkey regsz.Value)
+        let localData = toString (getRegistryValue regsz.Key regsz.Subkey regsz.Value regsz.RegType32)
         let comparison = BaseTypes.toStringComparison regsz.Comparison
         match localData with
         |Some ld -> BaseTypes.compareString comparison ld regsz.Data
