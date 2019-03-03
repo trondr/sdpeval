@@ -27,6 +27,6 @@
     <file src="sdpeval.dll" target="lib\net472" />
     <file src="sdpeval.pdb" target="lib\net472" />
     <file src="Microsoft.UpdateServices.Administration.dll" target="lib\net472" />
-	<file src="**\*.fs" target="." />
+	<file src="**\*.fs" target="src" />
   </files>
 </package>

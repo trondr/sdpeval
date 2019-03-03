@@ -87,7 +87,7 @@ Target.create "Test" (fun _ ->
 )
 
 let setNugetParameters (nugetParams:Fake.DotNet.NuGet.NuGet.NuGetParams) =
-    let nparams = {nugetParams with Authors=["github.com/trondr"];Version="1.0.0.0";Description="Evaluatessss WSUS Software Distribution Package applicability rules as defined in WSUS schema reference https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb972752(v=vs.85)";Project="https://github.com/trondr/sdpeval"}
+    let nparams = {nugetParams with Authors=["github.com/trondr"];Version="1.0.0.0";SymbolPackage=Fake.DotNet.NuGet.NuGet.NugetSymbolPackage.Nuspec}
     printfn "NuGet Paramaters: %A" nparams
     nparams
 
@@ -96,7 +96,7 @@ Target.create "CreateNugetPackage" (fun _ ->
     copyPackFiles ()
     sourceFiles() |> Shell.copyFilesWithSubFolder "NuGet"
     System.IO.File.Copy(nuspecTemplate(),nuspecTarget,true)
-    Fake.DotNet.NuGet.NuGet.NuGetPack setNugetParameters nuspecTarget //@"C:\Dev\github.trondr\sdpeval\src\lib\sdpeval\sdpeval.fsproj"
+    Fake.DotNet.NuGet.NuGet.NuGetPack setNugetParameters nuspecTarget    
 )
 
 Target.create "Publish" (fun _ ->
