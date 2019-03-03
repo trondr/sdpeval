@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>sdpeval</id>
+    <version>0.0.0.0</version>
+    <title>sdpeval</title>
+    <authors>github.com/trondr</authors>
+    <owners>github.com/trondr</owners>
+    <licenseUrl>https://github.com/trondr/sdpeval/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/trondr/sdpeval</projectUrl>    
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Evaluate WSUS Software Distribution Package applicability rules as defined in WSUS XML Schema Reference (https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb972752(v=vs.85)). sdpeval depends on Microsoft Update Services installed as part of the RSAT Windows Feature included in Windows 10 1809 (requires download and install from microsoft.com for earlier operating systems). More specifically spdeval will fail to load sdp xml files if the WSUS XML Schemas is not found in '"%ProgramFiles%\Update Services\Schema"' folder.</description>
+    <copyright>github.com/trondr</copyright>
+    <tags></tags>
+    <references>
+      <reference file="sdpeval.dll" />
+      <reference file="Microsoft.UpdateServices.Administration.dll" />
+    </references>
+	<dependencies>	  
+	  <dependency id="Common.Logging" version="3.4.1" />
+      <dependency id="FSharp.Core" version="4.6.2" />
+      <dependency id="Microsoft.CSharp" version="4.5.0" />
+      <dependency id="System.ValueTuple" version="4.5.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="sdpeval.dll" target="lib\net472" />
+    <file src="sdpeval.pdb" target="lib\net472" />
+    <file src="Microsoft.UpdateServices.Administration.dll" target="lib\net472" />
+	<file src="**\*.fs" target="." />
+  </files>
+</package>
