@@ -1,6 +1,7 @@
 #r "paket:
 nuget NUnit.ConsoleRunner
 nuget Fake.IO.FileSystem
+nuget Fake.DotNet.AssemblyInfoFile
 nuget Fake.DotNet.MSBuild
 nuget Fake.DotNet.Testing.Nunit
 nuget Fake.Testing.Common
@@ -13,6 +14,7 @@ open Fake.IO
 open Fake.IO.Globbing.Operators //enables !! and globbing
 open Fake.Core
 open Fake.DotNet.Testing
+open Fake.DotNet
 
 //Properties
 let buildFolder = System.IO.Path.GetFullPath("./build/")
@@ -24,6 +26,14 @@ let nugetFolder = "./NuGet/"
 
 let globalPackagesFolder =     
     System.Environment.ExpandEnvironmentVariables("%userprofile%\.nuget\packages")
+
+let assemblyVersion =
+    let majorVersion = "1"
+    let minorVersion = "0"
+    let now = System.DateTime.Now    
+    let buildVersion = sprintf "%02d%03d" (now.Year - 2000) (now.DayOfYear) //Example: 19063
+    let revisionVersion = "1"
+    sprintf "%s.%s.%s.%s" majorVersion minorVersion buildVersion revisionVersion
 
 let getVersion file = 
     System.Reflection.AssemblyName.GetAssemblyName(file).Version.ToString()
@@ -55,7 +65,20 @@ Target.create "Clean" (fun _ ->
 )
 
 Target.create "BuildLib" (fun _ -> 
-    Trace.trace "Building lib..."
+    Trace.trace "Building lib..."    
+    AssemblyInfoFile.createFSharp "./src/lib/sdpeval/AssemblyInfo.fs"
+        [
+            AssemblyInfo.Title "sdpeval"
+            AssemblyInfo.Description "Evaluate WSUS Software Distribution Package applicability rules as defined in WSUS XML Schema Reference [https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb972752(v=vs.85)]." 
+            AssemblyInfo.Product "sdpeval"
+            AssemblyInfo.Company "github/trondr"
+            AssemblyInfo.Copyright "Copyright \u00A9 github/trondr 2019"
+            AssemblyInfo.Version assemblyVersion
+            AssemblyInfo.FileVersion assemblyVersion                        
+            AssemblyInfo.ComVisible false
+            AssemblyInfo.Guid "59f9fa7c-b4a9-422c-8c52-958bbd1c6688"
+            AssemblyInfo.InternalsVisibleTo "spdeval.tests"
+        ]
     !! "src/lib/**/*.fsproj"
         |> Fake.DotNet.MSBuild.runRelease id buildLibFolder "Build"
         |> Trace.logItems "BuildApp-Output: "
@@ -87,7 +110,7 @@ Target.create "Test" (fun _ ->
 )
 
 let setNugetParameters (nugetParams:Fake.DotNet.NuGet.NuGet.NuGetParams) =
-    let nparams = {nugetParams with Authors=["github.com/trondr"];Version="1.0.0.0";SymbolPackage=Fake.DotNet.NuGet.NuGet.NugetSymbolPackage.Nuspec}
+    let nparams = {nugetParams with Authors=["github.com/trondr"];Version=assemblyVersion;SymbolPackage=Fake.DotNet.NuGet.NuGet.NugetSymbolPackage.Nuspec}
     printfn "NuGet Paramaters: %A" nparams
     nparams
 
