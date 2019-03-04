@@ -64,6 +64,13 @@ Target.create "Clean" (fun _ ->
     Shell.cleanDirs [ buildFolder; artifactFolder; nugetFolder ]
 )
 
+Target.create "RestorePackages" (fun _ ->
+     "./sdpeval.sln"
+     |> Fake.DotNet.NuGet.Restore.RestoreMSSolutionPackages (fun p ->
+         { p with             
+             Retries = 4 })
+   )
+
 Target.create "BuildLib" (fun _ -> 
     Trace.trace "Building lib..."    
     AssemblyInfoFile.createFSharp "./src/lib/sdpeval/AssemblyInfo.fs"
@@ -144,6 +151,7 @@ Target.create "Default" (fun _ ->
 open Fake.Core.TargetOperators
 
 "Clean" 
+    ==> "RestorePackages"
     ==> "BuildLib"
     ==> "BuildTest"
     ==> "Test"

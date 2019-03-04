@@ -7,6 +7,11 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sdpeval", "src\lib\sdpeval\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "spdeval.tests", "src\test\spdeval.tests\spdeval.tests.fsproj", "{EDAFC55B-EAA9-494D-9A39-D3A5BD3816B6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7EC0D937-C084-4DF4-9F52-D7633D4B624B}"
+	ProjectSection(SolutionItems) = preProject
+		build.fsx = build.fsx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
