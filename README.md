@@ -217,7 +217,7 @@ printfn "isInstallable=%b" isInstallable
 
 | Msi Applicability Rule       | Status      |
 |------------------------------|-------------|
-| MsiProductInstalled          | &#x274C;    |
+| MsiProductInstalled          | &#x2705;    |
 | MsiFeatureInstalledForProduct| &#x274C;    |
 | MsiPatchInstalledForProduct  | &#x274C;    |
 | MsiPatchInstalled            | &#x274C;    |
