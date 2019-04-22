@@ -53,6 +53,7 @@
     <Compile Include="WindowsVersion.fs" />
     <Compile Include="FileVersion.fs" />
     <Compile Include="Wmi.fs" />
+    <Compile Include="Msi.fs" />
     <Compile Include="sdp.fs" />
     <Content Include="packages.config" />
     <Content Include="README.txt" />

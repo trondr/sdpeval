@@ -26,6 +26,7 @@ module Sdp =
         |WindowsVersion of WindowsVersion
         |FileVersion of FileVersion
         |RegSz of RegSz
+        |MsiProductInstalled of MsiProductInstalled
 
     open sdpeval.Wmi 
     open sdpeval.SystemInfo
@@ -79,11 +80,21 @@ module Sdp =
         let regType32 =  toOption (getAttribute xElement "RegType32" (fun _ -> "false"))        
         ApplicabilityRule.RegSz {Comparison=comparison;Key=key;Subkey=subkey;RegType32=regType32;Value=value;Data=data}
 
+    let internal toMsiProductInstalled xElement =
+        let productCode = (getAttribute xElement "ProductCode" (fun _ -> raise (new Exception(sprintf "'ProductCode' attribute not specified for MsiProductInstalled applicability rule: %A" xElement))))
+        let versionMin = toOption (getAttribute xElement "VersionMin" (fun _ -> null))
+        let excludeVersionMin = toOption (getAttribute xElement "ExcludeVersionMin" (fun _ -> null))
+        let versionMax = toOption (getAttribute xElement "VersionMax" (fun _ -> null))
+        let excludeVersionMax = toOption (getAttribute xElement "ExcludeVersionMax" (fun _ -> null))
+        let language = toOption (getAttribute xElement "Language" (fun _ -> null))
+        ApplicabilityRule.MsiProductInstalled {ProductCode=productCode;VersionMin=versionMin;ExcludeVersionMin=excludeVersionMin;VersionMax=versionMax;ExcludeVersionMax=excludeVersionMax;Languange= language}
+
     let rec internal sdpXmlToApplicabilityRules (applicabilityXml:string) :ApplicabilityRule =
         let nameTable = new NameTable()
         let namespaceManager = new XmlNamespaceManager(nameTable);
         namespaceManager.AddNamespace("lar","http://schemas.microsoft.com/wsus/2005/04/CorporatePublishing/LogicalApplicabilityRules.xsd")
         namespaceManager.AddNamespace("bar","http://schemas.microsoft.com/wsus/2005/04/CorporatePublishing/BaseApplicabilityRules.xsd")
+        namespaceManager.AddNamespace("msiar","http://schemas.microsoft.com/wsus/2005/04/CorporatePublishing/MsiApplicabilityRules.xsd")
         let xmlParserContext = XmlParserContext(null,namespaceManager,null,XmlSpace.None)
         use xmlReader = new XmlTextReader(applicabilityXml,XmlNodeType.Element,xmlParserContext)
         let xElement = XElement.Load(xmlReader)
@@ -95,6 +106,7 @@ module Sdp =
         |"WindowsVersion" -> (toWindowsVersion xElement)
         |"FileVersion" -> (toFileVersion xElement)
         |"RegSz" -> (toRegSz xElement)
+        |"MsiProductInstalled" -> (toMsiProductInstalled xElement)
         |"And" -> 
             ApplicabilityRule.And (
                 xElement.Elements()
@@ -128,6 +140,7 @@ module Sdp =
         |WindowsVersion w -> (isWindowsVersion WindowsVersion.currentWindowsVersion w)
         |FileVersion fv -> (sdpeval.FileVersion.isFileVersion fv)
         |RegSz r -> sdpeval.RegistryOperations.isRegSz r
+        |MsiProductInstalled mp ->  sdpeval.Msi.isMsiProductInstalled mp
     
 
     /// <summary>

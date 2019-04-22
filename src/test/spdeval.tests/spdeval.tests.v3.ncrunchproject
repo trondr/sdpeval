@@ -33,6 +33,15 @@
             ServicePackMinor = Some 1us;};
  Expected = 4722438541563211546880;})</TestName>
       </NamedTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>sdpeval.tests.RegSzTests</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>sdpeval.tests.WindowsVersionTest</FixtureName>
+      </FixtureTestSelector>
+      <FixtureTestSelector>
+        <FixtureName>sdpeval.tests.sdptest</FixtureName>
+      </FixtureTestSelector>
     </IgnoredTests>
   </Settings>
 </ProjectConfiguration>
