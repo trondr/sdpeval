@@ -168,6 +168,7 @@ printfn "isInstallable=%b" isInstallable
 ```
 
 ## Status 
+Implemented rules are currently sufficient to process sdp xml found in ftp://ftp.hp.com/pub/softlib/software/sms_catalog/HpCatalogForSms.latest.cab and http://ftp.dell.com/catalog/DellSDPCatalogPC.cab
 
 5 of 5 logical applicability rules are supported
 
@@ -179,7 +180,7 @@ printfn "isInstallable=%b" isInstallable
 | Or                         | &#x2705;    |
 | Not                        | &#x2705;    |
 
-5 of 29 base applicability rules are supported, currently sufficient to process sdp xml found in ftp://ftp.hp.com/pub/softlib/software/sms_catalog/HpCatalogForSms.latest.cab
+5 of 29 base applicability rules are supported
 
 | Base Applicability Rule | Status      |
 |-------------------------|-------------|
@@ -213,7 +214,7 @@ printfn "isInstallable=%b" isInstallable
 | InstalledOnce           | &#x274C;    |
 | GenericQuery            | &#x274C;    |
 
-0 of 9 Msi applicability rules are supported
+1 of 9 Msi applicability rules are supported
 
 | Msi Applicability Rule       | Status      |
 |------------------------------|-------------|
