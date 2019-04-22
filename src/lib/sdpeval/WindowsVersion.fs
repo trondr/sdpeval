@@ -57,6 +57,8 @@ module internal WindowsVersion =
             match (windowsVersion.MajorVersion, windowsVersion.MinorVersion, windowsVersion.BuildNumber, windowsVersion.ServicePackMajor, windowsVersion.ServicePackMinor) with
             |(Some majorVersion, Some minorVersion, Some buildNumber, Some servicePackMajor, Some servicePackMinor) -> 
                 {MajorVersion=Some (toUInt32 majorVersion);MinorVersion=Some (toUInt32 minorVersion);BuildNumber=Some (toUInt32 buildNumber);ServicePackMajor=Some (toUInt16  servicePackMajor);ServicePackMinor=Some (toUInt16 servicePackMinor)}
+            |(Some majorVersion, Some minorVersion, None, Some servicePackMajor, Some servicePackMinor) -> 
+                {MajorVersion=Some (toUInt32 majorVersion);MinorVersion=Some (toUInt32 minorVersion);BuildNumber=None;ServicePackMajor=Some (toUInt16  servicePackMajor);ServicePackMinor=Some (toUInt16 servicePackMinor)}
             |(Some majorVersion, Some minorVersion, Some buildNumber, Some servicePackMajor, None) -> 
                 {MajorVersion=Some (toUInt32 majorVersion);MinorVersion=Some (toUInt32 minorVersion);BuildNumber=Some (toUInt32 buildNumber);ServicePackMajor=Some (toUInt16  servicePackMajor);ServicePackMinor=None}
             |(Some majorVersion, Some minorVersion, Some buildNumber, None, None) -> 

@@ -59,6 +59,9 @@ module WindowsVersionTest =
 
 
             yield {WEx={defaultCurrentWindowsVersion with MajorVersion = 6u;MinorVersion=2u;BuildNumber=9200u};W={defaultWindowsVersion with Comparison="EqualTo";MajorVersion=Some "6"};Expected=true}
+
+            yield {WEx={defaultCurrentWindowsVersion with MajorVersion = 5u;MinorVersion=0u;ServicePackMajor=4us;ServicePackMinor=0us};W={defaultWindowsVersion with Comparison="EqualTo";MajorVersion=Some "5"};Expected=true}
+
         ]
     
 
