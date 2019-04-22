@@ -30,3 +30,10 @@ module internal F =
         match value with
         |null -> None
         |v -> Some v
+
+    let toOptionalBool (boolString:string option) =
+        match boolString with
+        |None -> None
+        |Some "true" -> Some true
+        |Some "false" -> Some false
+        |_ -> None
