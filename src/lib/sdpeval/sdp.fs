@@ -135,7 +135,7 @@ module Sdp =
             al |> Seq.exists evaluateApplicabilityRule
         |Not al -> 
             not (evaluateApplicabilityRule al)
-        |WmiQuery wq -> (wmiQueryIsMatch wq.NameSpace wq.WqlQuery)
+        |WmiQuery wq -> (wmiQueryIsMatchMemoized {Namespace=wq.NameSpace;Query=wq.WqlQuery})
         |Processor p -> (isProcessor p.Architecture p.Level p.Revision)
         |WindowsVersion w -> (isWindowsVersion WindowsVersion.currentWindowsVersion w)
         |FileVersion fv -> (sdpeval.FileVersion.isFileVersion fv)
