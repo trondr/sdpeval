@@ -5,13 +5,18 @@ module internal Wmi =
 
     open System.Management
 
-    let wmiQueryIsMatch (nameSpace:string) (wqlQuery:string) :bool = 
-            let managementPath = new ManagementPath(nameSpace)
+    type Wql = {Namespace:string;Query:string}
+
+    let wmiQueryIsMatch (wql:Wql) = 
+            let managementPath = new ManagementPath(wql.Namespace)
             let scope = new ManagementScope(managementPath)            
-            let query = new ObjectQuery(wqlQuery)
-            use searcher = new ManagementObjectSearcher(scope,query)
+            let query = new ObjectQuery(wql.Query)
+            use searcher = new ManagementObjectSearcher(scope, query)
             use managementObjectCollection = searcher.Get()
             if(managementObjectCollection.Count = 0) then                
                 false
             else
                 true
+
+    let wmiQueryIsMatchMemoized =
+        F.memoize wmiQueryIsMatch

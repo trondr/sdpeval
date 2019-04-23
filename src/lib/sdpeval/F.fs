@@ -37,3 +37,25 @@ module internal F =
         |Some "true" -> Some true
         |Some "false" -> Some false
         |_ -> None
+
+
+    open System.Collections.Generic
+    ///
+    /// Source: http://www.fssnip.net/8P/title/Memoization-for-dynamic-programming
+    ///
+    /// The function creates a function that calls the argument 'f'
+    /// only once and stores the result in a mutable dictionary (cache)
+    /// Repeated calls to the resulting function return cached values.
+    ///
+    let memoize f =    
+      // Create (mutable) cache that is used for storing results of 
+      // for function arguments that were already calculated.
+      let cache = new Dictionary<_, _>()
+      (fun x ->
+          // The returned function first performs a cache lookup
+          let success, value = cache.TryGetValue(x)
+          if success then value else 
+            // If value was not found, calculate & cache it
+            let v = f(x) 
+            cache.[x] <- v
+            v)
