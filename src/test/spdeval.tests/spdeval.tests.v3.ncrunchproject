@@ -4,44 +4,6 @@
       <NamedTestSelector>
         <TestName>spdeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
       </NamedTestSelector>
-      <FixtureTestSelector>
-        <FixtureName>sdpeval.tests.FileVersionTest</FixtureName>
-      </FixtureTestSelector>
-      <NamedTestSelector>
-        <TestName>sdpeval.tests.WindowsVersionTest.isSuiteMaskMatchTest(False,517,5,True)</TestName>
-      </NamedTestSelector>
-      <FixtureTestSelector>
-        <FixtureName>sdpeval.tests.NativeMethodsTests</FixtureName>
-      </FixtureTestSelector>
-      <NamedTestSelector>
-        <TestName>sdpeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
-      </NamedTestSelector>
-      <NamedTestSelector>
-        <TestName>sdpeval.tests.WindowsVersionTest.isSuiteMaskMatchTest(False,517,ushort.MinValue,False)</TestName>
-      </NamedTestSelector>
-      <NamedTestSelector>
-        <TestName>sdpeval.tests.WindowsVersionTest.isSuiteMaskMatchTest(True,517,5,False)</TestName>
-      </NamedTestSelector>
-      <NamedTestSelector>
-        <TestName>sdpeval.tests.WindowsVersionTest.isSuiteMaskMatchTest(True,517,ushort.MinValue,False)</TestName>
-      </NamedTestSelector>
-      <NamedTestSelector>
-        <TestName>sdpeval.tests.WindowsVersionTest.versionToNumberTest({Version = {MajorVersion = Some 1u;
-            MinorVersion = Some 1u;
-            BuildNumber = Some 1u;
-            ServicePackMajor = Some 1us;
-            ServicePackMinor = Some 1us;};
- Expected = 4722438541563211546880;})</TestName>
-      </NamedTestSelector>
-      <FixtureTestSelector>
-        <FixtureName>sdpeval.tests.RegSzTests</FixtureName>
-      </FixtureTestSelector>
-      <FixtureTestSelector>
-        <FixtureName>sdpeval.tests.WindowsVersionTest</FixtureName>
-      </FixtureTestSelector>
-      <FixtureTestSelector>
-        <FixtureName>sdpeval.tests.sdptest</FixtureName>
-      </FixtureTestSelector>
     </IgnoredTests>
   </Settings>
 </ProjectConfiguration>
