@@ -10,6 +10,9 @@ module sdptest =
     open sdpeval.F
     open sdpeval.tests
 
+    //1. Download 'ftp://ftp.hp.com/pub/softlib/software/sms_catalog/HpCatalogForSms.latest.cab' and extract to C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest
+    //2. Make sure 'C:\Program Files (x86)\Update Services\Schema' exists
+
     [<Test>]
     [<Category(TestCategory.ManualTests)>]
     [<Timeout(120000)>]

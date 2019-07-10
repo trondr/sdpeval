@@ -4,6 +4,12 @@
       <NamedTestSelector>
         <TestName>spdeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
       </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.MsiTests.isMsiProductInstalledTest("{1216B4E6-D66B-46c3-BFA5-A170274B5BE1}","1.6.7.1",True)</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
+      </NamedTestSelector>
     </IgnoredTests>
   </Settings>
 </ProjectConfiguration>

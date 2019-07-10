@@ -7,7 +7,7 @@
     <authors>github.com/trondr</authors>
     <owners>github.com/trondr</owners>
     <licenseUrl>https://github.com/trondr/sdpeval/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/trondr/sdpeval</projectUrl>    
+    <projectUrl>https://github.com/trondr/sdpeval</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Evaluate WSUS Software Distribution Package applicability rules as defined in WSUS XML Schema Reference [https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb972752(v=vs.85)]. sdpeval depends on Microsoft Update Services installed as part of the RSAT Windows Feature included in Windows 10 1809 (requires download and install from microsoft.com for earlier operating systems). More specifically spdeval depends on Microsoft.UpdateServices.Administration.dll which again depends on the WSUS XML Schemas located in '"%ProgramFiles%\Update Services\Schema"' folder.</description>
     <copyright>github.com/trondr</copyright>
@@ -16,17 +16,19 @@
       <reference file="sdpeval.dll" />
       <reference file="Microsoft.UpdateServices.Administration.dll" />
     </references>
-	<dependencies>	  
-	  <dependency id="Common.Logging" version="3.4.1" />
-      <dependency id="FSharp.Core" version="4.6.2" />
-      <dependency id="Microsoft.CSharp" version="4.5.0" />
-      <dependency id="System.ValueTuple" version="4.5.0" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Common.Logging" version="3.4.1" />
+        <dependency id="FSharp.Core" version="4.6.2" />
+        <dependency id="Microsoft.CSharp" version="4.5.0" />
+        <dependency id="System.ValueTuple" version="4.5.0" />
+      </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="sdpeval.dll" target="lib\net472" />
-    <file src="sdpeval.pdb" target="lib\net472" />
-    <file src="Microsoft.UpdateServices.Administration.dll" target="lib\net472" />
-	<file src="**\*.fs" target="src" />
+    <file src="sdpeval.dll" target="lib\net45" />
+    <file src="sdpeval.pdb" target="lib\net45" />
+    <file src="Microsoft.UpdateServices.Administration.dll" target="lib\net45" />
+    <file src="**\*.fs" target="src" />
   </files>
 </package>
