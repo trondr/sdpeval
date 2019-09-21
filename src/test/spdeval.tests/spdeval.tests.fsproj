@@ -45,7 +45,12 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="F.fs" />
     <Compile Include="Init.fs" />
+    <Compile Include="WmiHelper.fs" />
+    <Compile Include="ManufactureTypes.fs" />
+    <Compile Include="SystemInfo.fs" />
+    <Compile Include="TestHelper.fs" />
     <Compile Include="NativeMethodsTests.fs" />
     <Compile Include="sdptests.fs" />
     <Compile Include="WindowsVersionTest.fs" />
@@ -67,6 +72,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.ValueTuple">
       <Private>True</Private>

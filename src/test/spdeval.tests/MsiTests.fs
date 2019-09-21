@@ -7,16 +7,20 @@ module MsiTests =
     open System
     
     [<Test>]
-    [<TestCase("{1216B4E6-D66B-46c3-BFA5-A170274B5BE1}","1.6.7.1",true)>]
-    [<TestCase("{1216B4E6-D66B-46c3-BFA5-A170274B5BE2}","1.6.7.1",false)>]
-    [<TestCase("{00D7C76E-B036-4DF5-AA89-D36A3D494BC5}","1.6.7.1",true)>]
-    [<TestCase("{00D7C76E-B036-4DF5-AA89-D36A3D494BC6}","1.6.7.1",false)>]
+    [<TestCase("01.Installed product->True","AllModels","{1784A8CD-F7FE-47E2-A87D-1F31E7242D0D}","1.6.7.1","Microsoft .NET Framework 4.7.2 Targeting Pack",true)>]
+    [<TestCase("02.Not installed product->False","AllModels","{1216B4E6-D66B-46c3-BFA5-A170274B5BE2}","1.6.7.1","Some unknown product that should not be installed",false)>]    
     [<Category(TestCategory.ManualTests)>]
-    let isMsiProductInstalledTest(productCode:string, versionMin:string, expected:bool) =
-        printfn "Process size: %A" IntPtr.Size       
-        let msiProductInstalled = {ProductCode=productCode;VersionMin=Some versionMin;VersionMax=None;ExcludeVersionMin=None;ExcludeVersionMax=None;Languange=None}
-        let actual = sdpeval.Msi.isMsiProductInstalled msiProductInstalled
-        Assert.AreEqual(expected,actual,sprintf "%s %s %b" productCode versionMin expected)
+    let isMsiProductInstalledTest(testName,validModel,productCode:string, versionMin:string,displayName, expected:bool) =
+        let testIsRelevant = TestHelper.IsTestRelevant testName validModel
+        match testIsRelevant with
+        |false ->
+            printfn "WARNING: Skipped test '%s'" testName
+            Assert.Inconclusive()
+        |true -> 
+            printfn "Process size: %A" IntPtr.Size       
+            let msiProductInstalled = {ProductCode=productCode;VersionMin=Some versionMin;VersionMax=None;ExcludeVersionMin=None;ExcludeVersionMax=None;Languange=None}
+            let actual = sdpeval.Msi.isMsiProductInstalled msiProductInstalled
+            Assert.AreEqual(expected,actual,sprintf "%s %s (%s) %b" productCode versionMin displayName expected)
 
     type internal TestData =
         {
