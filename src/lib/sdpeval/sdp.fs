@@ -152,7 +152,7 @@ module Sdp =
             match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating Not rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
             isMatch
         |WmiQuery wq ->             
-            let isMatch = (wmiQueryIsMatchMemoized {Namespace=wq.NameSpace;Query=wq.WqlQuery})
+            let isMatch = (wmiQueryIsMatchMemoized logger {Namespace=wq.NameSpace;Query=wq.WqlQuery})
             match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating WmiQuery rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
             isMatch
         |Processor p -> 
