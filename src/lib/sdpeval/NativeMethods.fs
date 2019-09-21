@@ -83,7 +83,7 @@ module internal NativeMethods =
             val mutable dwProcessorType: Int32
             val mutable dwAllocationGranularity: Int32
             val mutable wProcessorLevel: Int16
-            val mutable wProcessorRevision: Int16
+            val mutable wProcessorRevision: UInt16
         end
 
     [<DllImport("kernel32.dll", SetLastError = true)>]

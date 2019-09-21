@@ -62,11 +62,14 @@ module internal FileVersion =
         let comparison = BaseTypes.toScalarComparison fileVersion.Comparison
         BaseTypes.compareScalar comparison currentVersionNumber versionNumber
 
-    let isFileVersion fileVersion = 
+    let isFileVersion (logger:Common.Logging.ILog) fileVersion = 
         let path = getPath fileVersion
         match (sdpeval.F.fileExists path) with
         |true -> 
             let currentFileVersion = getCurrentFileVersion fileVersion
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Current fileversion: '%A'." currentFileVersion)|false -> ()
             isFileVersionBase currentFileVersion fileVersion
-        |false -> false
+        |false -> 
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "File does not exist: '%s'. Return: false" path)|false -> ()
+            false
 

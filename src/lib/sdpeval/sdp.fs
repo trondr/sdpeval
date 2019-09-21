@@ -89,7 +89,7 @@ module Sdp =
         let language = toOption (getAttribute xElement "Language" (fun _ -> null))
         ApplicabilityRule.MsiProductInstalled {ProductCode=productCode;VersionMin=versionMin;ExcludeVersionMin=excludeVersionMin;VersionMax=versionMax;ExcludeVersionMax=excludeVersionMax;Languange= language}
 
-    let rec internal sdpXmlToApplicabilityRules (applicabilityXml:string) :ApplicabilityRule =
+    let rec internal sdpXmlToApplicabilityRules (logger:Common.Logging.ILog) (applicabilityXml:string) :ApplicabilityRule =
         let nameTable = new NameTable()
         let namespaceManager = new XmlNamespaceManager(nameTable);
         namespaceManager.AddNamespace("lar","http://schemas.microsoft.com/wsus/2005/04/CorporatePublishing/LogicalApplicabilityRules.xsd")
@@ -98,56 +98,95 @@ module Sdp =
         let xmlParserContext = XmlParserContext(null,namespaceManager,null,XmlSpace.None)
         use xmlReader = new XmlTextReader(applicabilityXml,XmlNodeType.Element,xmlParserContext)
         let xElement = XElement.Load(xmlReader)
-        match xElement.Name.LocalName with
-        |"True" -> ApplicabilityRule.True
-        |"False" -> ApplicabilityRule.False
-        |"WmiQuery" -> ApplicabilityRule.WmiQuery{NameSpace=(getAttribute xElement "Namespace" (fun _ -> ""));WqlQuery=(getAttribute xElement "WqlQuery" (fun _ -> ""))}
-        |"Processor" -> (toProcessor xElement)
-        |"WindowsVersion" -> (toWindowsVersion xElement)
-        |"FileVersion" -> (toFileVersion xElement)
-        |"RegSz" -> (toRegSz xElement)
-        |"MsiProductInstalled" -> (toMsiProductInstalled xElement)
-        |"And" -> 
-            ApplicabilityRule.And (
-                xElement.Elements()
-                |>Seq.map (fun x -> (                                        
-                                        sdpXmlToApplicabilityRules (x.ToString()))
-                            )
-                |>Seq.toArray
-                )
-        |"Or" -> 
-            ApplicabilityRule.Or (    
-                xElement.Elements()
-                |>Seq.map (fun x -> (sdpXmlToApplicabilityRules (x.ToString())))
-                |>Seq.toArray 
-                )
-        |"Not" -> 
-            ApplicabilityRule.Not (sdpXmlToApplicabilityRules ((xElement.Descendants()|>Seq.head).ToString()))
-        |_ -> raise (new NotSupportedException(sprintf "Applicability rule for '%s' is not implemented." xElement.Name.LocalName))
+        match logger.IsDebugEnabled with true->logger.Debug(sprintf "Processing ApplicabilityRule element: %s" xElement.Name.LocalName)|false -> ()
+        let applicabilityRules =
+            match xElement.Name.LocalName with
+            |"True" -> ApplicabilityRule.True
+            |"False" -> ApplicabilityRule.False
+            |"WmiQuery" -> ApplicabilityRule.WmiQuery{NameSpace=(getAttribute xElement "Namespace" (fun _ -> ""));WqlQuery=(getAttribute xElement "WqlQuery" (fun _ -> ""))}
+            |"Processor" -> (toProcessor xElement)
+            |"WindowsVersion" -> (toWindowsVersion xElement)
+            |"FileVersion" -> (toFileVersion xElement)
+            |"RegSz" -> (toRegSz xElement)
+            |"MsiProductInstalled" -> (toMsiProductInstalled xElement)
+            |"And" -> 
+                ApplicabilityRule.And (
+                    xElement.Elements()
+                    |>Seq.map (fun x -> (                                        
+                                            sdpXmlToApplicabilityRules logger (x.ToString()))
+                                )
+                    |>Seq.toArray
+                    )
+            |"Or" -> 
+                ApplicabilityRule.Or (    
+                    xElement.Elements()
+                    |>Seq.map (fun x -> (sdpXmlToApplicabilityRules logger (x.ToString())))
+                    |>Seq.toArray 
+                    )
+            |"Not" -> 
+                ApplicabilityRule.Not (sdpXmlToApplicabilityRules logger ((xElement.Descendants()|>Seq.head).ToString()))
+            |_ -> raise (new NotSupportedException(sprintf "Applicability rule for '%s' is not implemented." xElement.Name.LocalName))
+        match logger.IsDebugEnabled with true->logger.Debug(sprintf "Sdp Converted to ApplicabilityRule: %A" applicabilityRules)|false -> ()
+        applicabilityRules
 
-    let rec internal evaluateApplicabilityRule applicabilityRule =
+    let rec internal evaluateApplicabilityRule (logger:Common.Logging.ILog) applicabilityRule =
         match applicabilityRule with
-        |True -> true
-        |False -> false
+        |True -> 
+            let isMatch = true
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating True rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
+        |False -> 
+            let isMatch = false
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating False rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
         |And al -> 
-            al |> Seq.forall evaluateApplicabilityRule
+            let isMatch = al |> Seq.forall (evaluateApplicabilityRule logger)
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating And rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
         |Or al -> 
-            al |> Seq.exists evaluateApplicabilityRule
+            let isMatch = al |> Seq.exists (evaluateApplicabilityRule logger)
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating Or rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
         |Not al -> 
-            not (evaluateApplicabilityRule al)
-        |WmiQuery wq -> (wmiQueryIsMatchMemoized {Namespace=wq.NameSpace;Query=wq.WqlQuery})
-        |Processor p -> (isProcessor p.Architecture p.Level p.Revision)
-        |WindowsVersion w -> (isWindowsVersion WindowsVersion.currentWindowsVersion w)
-        |FileVersion fv -> (sdpeval.FileVersion.isFileVersion fv)
-        |RegSz r -> sdpeval.RegistryOperations.isRegSz r
-        |MsiProductInstalled mp ->  sdpeval.Msi.isMsiProductInstalled mp
-    
+            let isMatch = not (evaluateApplicabilityRule logger al)
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating Not rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
+        |WmiQuery wq ->             
+            let isMatch = (wmiQueryIsMatchMemoized {Namespace=wq.NameSpace;Query=wq.WqlQuery})
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating WmiQuery rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
+        |Processor p -> 
+            let isMatch = (isProcessor logger p.Architecture p.Level p.Revision)
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating Processor rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
+        |WindowsVersion w -> 
+            let isMatch = (isWindowsVersion WindowsVersion.currentWindowsVersion w)
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating WindowsVersion rule: '%A'. Current WindowsVersion: %A. Return: %b" applicabilityRule WindowsVersion.currentWindowsVersion isMatch)|false -> ()
+            isMatch
+        |FileVersion fv -> 
+            let isMatch = (sdpeval.FileVersion.isFileVersion logger fv)
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating FileVersion rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
+        |RegSz r -> 
+            let isMatch = sdpeval.RegistryOperations.isRegSz r
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating RegSz rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
+        |MsiProductInstalled mp ->  
+            let isMatch = sdpeval.Msi.isMsiProductInstalled mp
+            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating MsiProductInstalled rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            isMatch
 
     /// <summary>
     /// Evaluate applicability xml rule
     /// </summary>
     /// <param name="applicabilityXml">Example: "<lar:And><bar:Processor Architecture=\"9\" Level=\"6\" Revision=\"-29174\"/></lar:And>"</param>
     let EvaluateApplicabilityXml (applicabilityXml:string) =
+        let logger = Common.Logging.LogManager.GetLogger("sdpeval.sdp")        
         applicabilityXml
-        |>sdpXmlToApplicabilityRules
-        |>evaluateApplicabilityRule
+        |>sdpXmlToApplicabilityRules logger
+        |>evaluateApplicabilityRule logger
+
+    let EvaluateApplicabilityXmlWithLogging (logger:Common.Logging.ILog) (applicabilityXml:string) =
+        applicabilityXml
+        |>sdpXmlToApplicabilityRules logger
+        |>evaluateApplicabilityRule logger
