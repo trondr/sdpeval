@@ -5,6 +5,7 @@ module Sdp =
     open Microsoft.UpdateServices.Administration    
     open System    
     open sdpeval.BaseApplicabilityRules
+    open sdpeval.Logging
         
     /// <summary>
     /// Load Microsoft.UpdateServices.Administration.SoftwareDistributionPackage from file
@@ -98,7 +99,7 @@ module Sdp =
         let xmlParserContext = XmlParserContext(null,namespaceManager,null,XmlSpace.None)
         use xmlReader = new XmlTextReader(applicabilityXml,XmlNodeType.Element,xmlParserContext)
         let xElement = XElement.Load(xmlReader)
-        match logger.IsDebugEnabled with true->logger.Debug(sprintf "Processing ApplicabilityRule element: %s" xElement.Name.LocalName)|false -> ()
+        logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Processing ApplicabilityRule element: %s" xElement.Name.LocalName))|>ignore))
         let applicabilityRules =
             match xElement.Name.LocalName with
             |"True" -> ApplicabilityRule.True
@@ -126,54 +127,54 @@ module Sdp =
             |"Not" -> 
                 ApplicabilityRule.Not (sdpXmlToApplicabilityRules logger ((xElement.Descendants()|>Seq.head).ToString()))
             |_ -> raise (new NotSupportedException(sprintf "Applicability rule for '%s' is not implemented." xElement.Name.LocalName))
-        match logger.IsDebugEnabled with true->logger.Debug(sprintf "Sdp Converted to ApplicabilityRule: %A" applicabilityRules)|false -> ()
+        logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Sdp Converted to ApplicabilityRule: %A" applicabilityRules))|>ignore))
         applicabilityRules
 
     let rec internal evaluateApplicabilityRule (logger:Common.Logging.ILog) applicabilityRule =
         match applicabilityRule with
         |True -> 
             let isMatch = true
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating True rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating True rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |False -> 
             let isMatch = false
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating False rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating False rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |And al -> 
             let isMatch = al |> Seq.forall (evaluateApplicabilityRule logger)
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating And rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating And rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |Or al -> 
             let isMatch = al |> Seq.exists (evaluateApplicabilityRule logger)
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating Or rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating Or rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |Not al -> 
             let isMatch = not (evaluateApplicabilityRule logger al)
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating Not rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating Not rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |WmiQuery wq ->             
             let isMatch = (wmiQueryIsMatchMemoized logger {Namespace=wq.NameSpace;Query=wq.WqlQuery})
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating WmiQuery rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating WmiQuery rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |Processor p -> 
             let isMatch = (isProcessor logger p.Architecture p.Level p.Revision)
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating Processor rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating Processor rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |WindowsVersion w -> 
             let isMatch = (isWindowsVersion WindowsVersion.currentWindowsVersion w)
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating WindowsVersion rule: '%A'. Current WindowsVersion: %A. Return: %b" applicabilityRule WindowsVersion.currentWindowsVersion isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating WindowsVersion rule: '%A'. Current WindowsVersion: %A. Return: %b" applicabilityRule WindowsVersion.currentWindowsVersion isMatch))|>ignore))
             isMatch
         |FileVersion fv -> 
             let isMatch = (sdpeval.FileVersion.isFileVersion logger fv)
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating FileVersion rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating FileVersion rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |RegSz r -> 
             let isMatch = sdpeval.RegistryOperations.isRegSz r
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating RegSz rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating RegSz rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
         |MsiProductInstalled mp ->  
             let isMatch = sdpeval.Msi.isMsiProductInstalled mp
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Evaluating MsiProductInstalled rule: '%A'. Return: %b" applicabilityRule isMatch)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Evaluating MsiProductInstalled rule: '%A'. Return: %b" applicabilityRule isMatch))|>ignore))
             isMatch
 
     /// <summary>

@@ -5,6 +5,7 @@ module internal RegistryOperations =
     open F    
     open Microsoft.Win32;
     open BaseApplicabilityRules
+    open sdpeval.Logging
         
     let logger = Logging.getLoggerByName("RegistryOperations")
 
@@ -41,7 +42,7 @@ module internal RegistryOperations =
             getRegistryValueUnsafe hiveName subKeyPath valueName isRegType32
         with
         |ex ->
-            if(logger.IsDebugEnabled) then logger.Debug(sprintf "[%s\\%s]%s. Error: %s" hiveName subKeyPath valueName ex.Message)
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "[%s\\%s]%s. Error: %s" hiveName subKeyPath valueName ex.Message))|>ignore))
             None
      
     let toString (data:obj option) = 

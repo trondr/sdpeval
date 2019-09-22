@@ -59,3 +59,9 @@ module internal F =
             let v = f(x) 
             cache.[x] <- v
             v)
+    
+    let processBit =
+        match IntPtr.Size with
+        |8 -> "64-Bit"
+        |4 -> "32-Bit"
+        |_ -> "Unknown"

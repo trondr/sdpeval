@@ -1,5 +1,6 @@
 ﻿<ProjectConfiguration>
   <Settings>
+    <BuildProcessArchitecture>x64</BuildProcessArchitecture>
     <IgnoredTests>
       <NamedTestSelector>
         <TestName>spdeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
@@ -8,7 +9,31 @@
         <TestName>sdpeval.tests.MsiTests.isMsiProductInstalledTest("{1216B4E6-D66B-46c3-BFA5-A170274B5BE1}","1.6.7.1",True)</TestName>
       </NamedTestSelector>
       <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.sdpXmlToApplicabilityRulesTests("21.Processor:Revision 24067","20EQ0022MN???","&lt;lar:And&gt;&lt;bar:Processor Revision=\"24067\"/&gt;&lt;/lar:And&gt;",True,"This unit test might fail depending on the current processor revision.",False)</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.sdpXmlToApplicabilityRulesTests("22.Processor:Architecture 9","20EQ0022MN","&lt;lar:And&gt;&lt;bar:Processor Architecture=\"9\" Level=\"6\" Revision=\"24067\"/&gt;&lt;/lar:And&gt;",True,"This unit test might fail depending on the current processor revision. Run successfully on Lenovo P50 (20EQ0022MN).",False)</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.sdpXmlToApplicabilityRulesTests("21.Processor:Revision 19971","SomeDell???","&lt;lar:And&gt;&lt;bar:Processor Revision=\"19971\"/&gt;&lt;/lar:And&gt;",True,"This unit test might fail depending on the current processor revision.",False)</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.sdpXmlToApplicabilityRulesTests("22.Processor:Revision 24067","20EQ0022MN???","&lt;lar:And&gt;&lt;bar:Processor Revision=\"24067\"/&gt;&lt;/lar:And&gt;",True,"This unit test might fail depending on the current processor revision.",False)</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.sdpXmlToApplicabilityRulesTests("23.Processor:Architecture 9, Level 6, Revision 19971","SomeHP???","&lt;lar:And&gt;&lt;bar:Processor Architecture=\"9\" Level=\"6\" Revision=\"19971\"/&gt;&lt;/lar:And&gt;",True,"This unit test might fail depending on the current processor revision.",False)</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.sdpXmlToApplicabilityRulesTests("24.Processor:Architecture 9","20EQ0022MN","&lt;lar:And&gt;&lt;bar:Processor Architecture=\"9\" Level=\"6\" Revision=\"24067\"/&gt;&lt;/lar:And&gt;",True,"This unit test might fail depending on the current processor revision. Run successfully on Lenovo P50 (20EQ0022MN).",False)</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.sdpXmlToApplicabilityRulesTests("26.WmiQuery: Complex Logic","SomeDell","&lt;lar:And&gt;&lt;bar:WmiQuery Namespace=\"Root\\Dell\\sysinv\" WqlQuery=\"SELECT * FROM Dell_SoftwareIdentity WHERE (Description &amp;gt;= 'Dell:APAC_102511__' AND Description &amp;lt; 'Dell:APAC_102511__~')\" /&gt;&lt;lar:Not&gt;&lt;bar:WmiQuery Namespace=\"Root\\Dell\\sysinv\" WqlQuery=\"SELECT * FROM Dell_SoftwareIdentity WHERE (Description &amp;gt;= 'Dell:APAC_102511__' AND Description &amp;lt; 'Dell:APAC_102511__~') AND VersionString &amp;lt; '0001.0002.1004.0000'\" /&gt;&lt;/lar:Not&gt;&lt;/lar:And&gt;",False,"This unit test might fail depending on the current PC model not beeing a Dell and that Dell sysinventory agent not beeing installed.",False)</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
         <TestName>sdpeval.tests.sdptest.loadsdpTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2")</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>sdpeval.tests.sdptest.loadsdpFileTest("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\\V2\\00004850-0000-0000-5350-000000071121.sdp")</TestName>
       </NamedTestSelector>
     </IgnoredTests>
   </Settings>

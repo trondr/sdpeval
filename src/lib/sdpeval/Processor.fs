@@ -5,6 +5,7 @@ module internal SystemInfo =
     open System
     open sdpeval.BaseTypes
     open sdpeval.NativeMethods
+    open sdpeval.Logging
 
     let systemInfo = 
         getNativeSystemInfo()
@@ -30,21 +31,21 @@ module internal SystemInfo =
             if(architecture = null) then
                 true
             else
-                match logger.IsDebugEnabled with true->logger.Debug(sprintf "Current processor architecture: '%u'." processorArchitecture)|false -> ()
+                logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Current processor architecture: '%u'." processorArchitecture))|>ignore))
                 (toUInt16 architecture) = processorArchitecture
 
         let isLevel =
             if(level = null) then
                 true
             else
-                match logger.IsDebugEnabled with true->logger.Debug(sprintf "Current processor level: '%i'." processorLevel)|false -> ()
+                logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Current processor level: '%i'." processorLevel))|>ignore))
                 (toInt16 level) = processorLevel
 
         let isRevision =
             if(revision = null) then
                 true
             else
-                match logger.IsDebugEnabled with true->logger.Debug(sprintf "Current processor revision: '%i'." processorRevision)|false -> ()
+                logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Current processor revision: '%u'." processorRevision))|>ignore))
                 (toUInt16 revision) = processorRevision
         
         (isArchitecture && isLevel && isRevision)           

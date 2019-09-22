@@ -52,6 +52,45 @@ module sdptest =
         ()
     
     [<Test>]
+    [<Category(TestCategory.ManualTests)>]
+    [<Timeout(120000)>]
+    [<TestCase("C:\\Temp\\DriverToolCache\\HpCatalogForSms.latest\\\V2\\00004850-0000-0000-5350-000000071121.sdp")>]
+    let loadsdpFileTest (sdpFile) =
+        let sdpfiles = [|sdpFile|] 
+        let logger = Common.Logging.Simple.ConsoleOutLogger("sdpeval.tests",Common.Logging.LogLevel.All,true,true,true,"yyyy-MM-dd-HH-mm-ss-ms")
+
+        sdpfiles
+        |> Array.map(fun f ->                 
+                let actual = LoadSdp f
+                Assert.IsNotNull(actual.Description)                
+                let isInstallableRules = sdpeval.Sdp.sdpXmlToApplicabilityRules logger actual.IsInstallable
+                let isRootInstallable = (sdpeval.Sdp.evaluateApplicabilityRule logger isInstallableRules)
+                //if(isInstallable) then                    
+                //    printfn "%s IsInstallable:%b Rule:%A" actual.Title isInstallable actual.IsInstallable
+                
+                actual.InstallableItems
+                |> Seq.map(fun ii ->                                                 
+                        let IsInstallableRules = sdpeval.Sdp.sdpXmlToApplicabilityRules logger ii.IsInstallableApplicabilityRule                        
+                        let isInstallable = (sdpeval.Sdp.evaluateApplicabilityRule logger IsInstallableRules)
+                        //if(isInstallable) then                            
+                        //printf "%s IsInstallable: %b Rule:%A" actual.Title isInstallable ii.IsInstallableApplicabilityRule
+                        printf "%s (%A) IsInstallable: %b (%b)" actual.Title actual.CreationDate  isInstallable (isRootInstallable)
+                        let isInstalledRules = sdpeval.Sdp.sdpXmlToApplicabilityRules logger ii.IsInstalledApplicabilityRule
+                        let isInstalled = (sdpeval.Sdp.evaluateApplicabilityRule logger isInstalledRules)
+                        //if(isInstalled) then                            
+                        //printfn " IsInstalled:%b Rule:%A" isInstalled ii.IsInstalledApplicabilityRule
+                        printfn " IsInstalled:%b" isInstalled
+
+                    ) 
+                |>Seq.toArray
+                |>ignore
+                
+            ) |> ignore
+        
+        ()
+
+
+    [<Test>]
     [<Category(TestCategory.UnitTests)>]
     [<TestCase("01.And:True+True->True","AllModels","<lar:And><lar:True /><lar:True /></lar:And>",true,"",false)>]
     [<TestCase("02.And:False+True->False","AllModels","<lar:And><lar:False /><lar:True /></lar:And>",false,"",false)>]
@@ -137,6 +176,59 @@ module sdptest =
     </lar:Or>
 </lar:And>",true,"This unit test might fail depending on the current manufacturer, processor architecturer, windows version or release id read from registry.",false)>]
 
+    [<TestCase("28.WmiQuery: Installable update sp96016 (00004850-0000-0000-5350-000000096016.sdp)","854A","<lar:And>
+    <bar:WmiQuery Namespace=\"Root\\cimv2\" WqlQuery=\"select * from Win32_ComputerSystem where (Manufacturer='Hewlett-Packard' and not (Model like '%Proliant%')) or (Manufacturer='HP') \" />
+    <lar:Or>
+      <lar:And>
+        <bar:Processor Architecture=\"9\" />
+        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1903\" />
+      </lar:And>
+      <lar:And>
+        <bar:Processor Architecture=\"9\" />
+        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1803\" />
+      </lar:And>
+      <lar:And>
+        <bar:Processor Architecture=\"9\" />
+        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1809\" />
+      </lar:And>
+    </lar:Or>
+</lar:And>",true,"This unit test might fail depending on the current processor revision. Run successfully on HP 830 G6 (854A).",false)>]
+
+    [<TestCase("29.WmiQuery: IsInstalled update sp96016 (00004850-0000-0000-5350-000000096016.sdp)","854A","<lar:And>
+    <bar:WmiQuery Namespace=\"Root\cimv2\" WqlQuery=\"select * from Win32_BaseBoard where Product LIKE '%8524%' or Product LIKE '%853d%' or Product LIKE '%8549%' or Product LIKE '%854a%' or Product LIKE '%856d%' or Product LIKE '%856e%' or Product LIKE '%860c%' or Product LIKE '%860f%' or Product LIKE '%8655%'\" />
+    <bar:WmiQuery Namespace=\"Root\cimv2\" WqlQuery=\"select * from Win32_PnpEntity where DeviceID LIKE '%ACPI\\\\HPQ8002%'\" />
+    <lar:Or>
+      <lar:And>
+        <bar:Processor Architecture=\"9\" />
+        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1803\" />
+        <bar:FileVersion Csidl=\"37\" Path=\"drivers\HpqKbFiltr.sys\" Comparison=\"GreaterThanOrEqualTo\" Version=\"11.0.7.1\" />
+      </lar:And>
+      <lar:And>
+        <bar:Processor Architecture=\"9\" />
+        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1809\" />
+        <bar:FileVersion Csidl=\"37\" Path=\"drivers\HpqKbFiltr.sys\" Comparison=\"GreaterThanOrEqualTo\" Version=\"11.0.7.1\" />
+      </lar:And>
+      <lar:And>
+        <bar:Processor Architecture=\"9\" />
+        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1903\" />
+        <bar:FileVersion Csidl=\"37\" Path=\"drivers\HpqKbFiltr.sys\" Comparison=\"GreaterThanOrEqualTo\" Version=\"11.0.7.1\" />
+      </lar:And>
+    </lar:Or>
+    </lar:And>",true,"This unit test might fail depending on the current processor revision. Run successfully on HP 830 G6 (854A).",false)>]
+
+    [<TestCase("30.WmiQuery: IsInstalled update sp96016 (00004850-0000-0000-5350-000000096016.sdp)","854A","<lar:And>
+    <bar:WindowsVersion Comparison=\"GreaterThanOrEqualTo\" MajorVersion=\"4\" />
+    <bar:WmiQuery Namespace=\"Root\\cimv2\" WqlQuery=\"select * from Win32_BaseBoard where Product LIKE '%8524%' or Product LIKE '%853d%' or Product LIKE '%8549%' or Product LIKE '%854a%' or Product LIKE '%856d%' or Product LIKE '%856e%' or Product LIKE '%860c%' or Product LIKE '%860f%' or Product LIKE '%8655%'\" />
+    <bar:WmiQuery Namespace=\"Root\\cimv2\" WqlQuery=\"select * from Win32_PnpEntity where DeviceID LIKE '%ACPI\\\\HPQ8002%'\" />
+</lar:And>",true,"This unit test might fail depending on the current processor revision. Run successfully on HP 830 G6 (854A).",false)>]
+
+
     let sdpXmlToApplicabilityRulesTests (testName:string,validModel:string,xmlString:string,expectedEvaluation:bool,errorMessage:string,expectException:bool) =         
     
         let testIsRelevant = TestHelper.IsTestRelevant testName validModel        
@@ -152,3 +244,4 @@ module sdptest =
                 Assert.AreEqual(expectedEvaluation,actualEvaluation,errorMessage)
             with
             |ex -> Assert.IsTrue(expectException,sprintf "%s. %s" ex.Message errorMessage)
+    

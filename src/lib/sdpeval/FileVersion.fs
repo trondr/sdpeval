@@ -6,12 +6,31 @@ module internal FileVersion =
     open sdpeval.BaseTypes
     open sdpeval.NativeMethods
     open System.Diagnostics
+    open sdpeval.Logging
 
     let getFileVersion filePath =
-        FileVersionInfo.GetVersionInfo(filePath).FileVersion
+        let versionInfo = FileVersionInfo.GetVersionInfo(filePath)
+        let fileVersion = sprintf  "%i.%i.%i.%i" versionInfo.FileMajorPart versionInfo.FileMinorPart versionInfo.FileBuildPart versionInfo.FilePrivatePart
+        fileVersion
+
+    let to64BitSystemFolder systemFolder =
+        match (System.Environment.Is64BitOperatingSystem) with
+        | true -> 
+            match IntPtr.Size with
+            |8 -> systemFolder
+            |4 ->
+                let windowsFolder = (new System.IO.DirectoryInfo(systemFolder)).Parent.FullName
+                let system64BitFolder = System.IO.Path.Combine(windowsFolder,"SysNative")
+                system64BitFolder
+            |_ -> systemFolder
+        |false -> systemFolder
 
     let getPath (fileVersion:FileVersion) =
-        match fileVersion.Csidl with
+        match fileVersion.Csidl with                                            
+            |Some "37"-> 
+                let systemFolder = getFolderPath (enum (toInt32 "37"))
+                let systemFolder64Bit = to64BitSystemFolder systemFolder
+                System.IO.Path.Combine(systemFolder64Bit,fileVersion.Path)
             |Some csidl-> 
                 let parentFolder = getFolderPath (enum (toInt32 csidl))
                 System.IO.Path.Combine(parentFolder,fileVersion.Path)                
@@ -67,9 +86,9 @@ module internal FileVersion =
         match (sdpeval.F.fileExists path) with
         |true -> 
             let currentFileVersion = getCurrentFileVersion fileVersion
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "Current fileversion: '%A'." currentFileVersion)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Current fileversion: '%A'." currentFileVersion))|>ignore))
             isFileVersionBase currentFileVersion fileVersion
         |false -> 
-            match logger.IsDebugEnabled with true->logger.Debug(sprintf "File does not exist: '%s'. Return: false" path)|false -> ()
+            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "File does not exist: '%s' (%s). Return: false" path F.processBit))|>ignore))
             false
 
