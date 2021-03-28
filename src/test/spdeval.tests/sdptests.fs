@@ -125,56 +125,56 @@ module sdptest =
     [<TestCase("24.Processor:Architecture 9","20EQ0022MN","<lar:And><bar:Processor Architecture=\"9\" Level=\"6\" Revision=\"24067\"/></lar:And>",true,"This unit test might fail depending on the current processor revision. Run successfully on Lenovo P50 (20EQ0022MN).",false)>]
     [<TestCase("25.Processor:Architecture 9","854A","<lar:And><bar:Processor Architecture=\"9\" Level=\"6\" Revision=\"36364\"/></lar:And>",true,"This unit test might fail depending on the current processor revision. Run successfully on HP 830 G6 (854A).",false)>]
     [<TestCase("26.WmiQuery: Complex Logic","SomeDell","<lar:And><bar:WmiQuery Namespace=\"Root\\Dell\\sysinv\" WqlQuery=\"SELECT * FROM Dell_SoftwareIdentity WHERE (Description &gt;= 'Dell:APAC_102511__' AND Description &lt; 'Dell:APAC_102511__~')\" /><lar:Not><bar:WmiQuery Namespace=\"Root\Dell\sysinv\" WqlQuery=\"SELECT * FROM Dell_SoftwareIdentity WHERE (Description &gt;= 'Dell:APAC_102511__' AND Description &lt; 'Dell:APAC_102511__~') AND VersionString &lt; '0001.0002.1004.0000'\" /></lar:Not></lar:And>",false,"This unit test might fail depending on the current PC model not beeing a Dell and that Dell sysinventory agent not beeing installed.",false)>]
-    [<TestCase("27.WmiQuery: Complex Logic->True","AllModels","<lar:And>
-    <bar:WmiQuery Namespace=\"Root\cimv2\" WqlQuery=\"select * from Win32_ComputerSystem where (Manufacturer='Hewlett-Packard' and not (Model like '%Proliant%')) or (Manufacturer='HP') or (Manufacturer='System manufacturer') \" />
-    <lar:Or>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"2009\" />
-      </lar:And>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"2003\" />
-      </lar:And>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1909\" />
-      </lar:And>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1903\" />
-      </lar:And>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1809\" />
-      </lar:And>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1803\" />
-      </lar:And>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1703\" />
-      </lar:And>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1709\" />
-      </lar:And>
-      <lar:And>
-        <bar:Processor Architecture=\"9\" />
-        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
-        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\Current\\Version\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1607\" />
-      </lar:And>
-    </lar:Or>
-</lar:And>",true,"This unit test might fail depending on the current manufacturer, processor architecturer, windows version or release id read from registry.",false)>]
+//    [<TestCase("27.WmiQuery: Complex Logic->True","AllModels","<lar:And>
+//    <bar:WmiQuery Namespace=\"Root\cimv2\" WqlQuery=\"select * from Win32_ComputerSystem where (Manufacturer='Hewlett-Packard' and not (Model like '%Proliant%')) or (Manufacturer='HP') or (Manufacturer='System manufacturer') \" />
+//    <lar:Or>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"2009\" />
+//      </lar:And>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"2003\" />
+//      </lar:And>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1909\" />
+//      </lar:And>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1903\" />
+//      </lar:And>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1809\" />
+//      </lar:And>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\Microsoft\Windows NT\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1803\" />
+//      </lar:And>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1703\" />
+//      </lar:And>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\CurrentVersion\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1709\" />
+//      </lar:And>
+//      <lar:And>
+//        <bar:Processor Architecture=\"9\" />
+//        <bar:WindowsVersion Comparison=\"EqualTo\" MajorVersion=\"10\" MinorVersion=\"0\" />
+//        <bar:RegSz Key=\"HKEY_LOCAL_MACHINE\" Subkey=\"Software\\Microsoft\\Windows NT\\Current\\Version\" Value=\"ReleaseId\" Comparison=\"EqualTo\" Data=\"1607\" />
+//      </lar:And>
+//    </lar:Or>
+//</lar:And>",true,"This unit test might fail depending on the current manufacturer, processor architecturer, windows version or release id read from registry.",false)>]
 
     [<TestCase("28.WmiQuery: Installable update sp96016 (00004850-0000-0000-5350-000000096016.sdp)","854A","<lar:And>
     <bar:WmiQuery Namespace=\"Root\\cimv2\" WqlQuery=\"select * from Win32_ComputerSystem where (Manufacturer='Hewlett-Packard' and not (Model like '%Proliant%')) or (Manufacturer='HP') \" />

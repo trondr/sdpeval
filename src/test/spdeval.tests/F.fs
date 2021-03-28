@@ -158,7 +158,7 @@ module F =
         member this.FolderPath = temporaryFolderPath
         interface IDisposable with
             member x.Dispose() = 
-                logger.Debug(new Msg(fun m -> m.Invoke((sprintf "Disposing folder '%A'" temporaryFolderPath))|>ignore))
+                logger.Debug(sprintf "Disposing folder '%A'" temporaryFolderPath)
                 match (result{
                     let! folderPath = temporaryFolderPath
                     let! deleted = deleteDirectory true folderPath

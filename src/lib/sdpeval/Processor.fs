@@ -31,21 +31,21 @@ module internal SystemInfo =
             if(architecture = null) then
                 true
             else
-                logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Current processor architecture: '%u'." processorArchitecture))|>ignore))
+                logger.Debug(sprintf "Current processor architecture: '%u'." processorArchitecture)
                 (toUInt16 architecture) = processorArchitecture
 
         let isLevel =
             if(level = null) then
                 true
             else
-                logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Current processor level: '%i'." processorLevel))|>ignore))
+                logger.Debug(sprintf "Current processor level: '%i'." processorLevel)
                 (toInt16 level) = processorLevel
 
         let isRevision =
             if(revision = null) then
                 true
             else
-                logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Current processor revision: '%u'." processorRevision))|>ignore))
+                logger.Debug(sprintf "Current processor revision: '%u'." processorRevision)
                 (toUInt16 revision) = processorRevision
         
         (isArchitecture && isLevel && isRevision)           

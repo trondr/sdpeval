@@ -28,10 +28,10 @@ module EmbeddedResource =
         nullGuard assembly "assembly" |> ignore
         if(logger.IsDebugEnabled) then
             let resourceNames = assembly.GetManifestResourceNames()
-            logger.Debug( new Msg(fun m ->m.Invoke((sprintf "Assembly '%s' has %i embedded resources." assembly.FullName resourceNames.Length))|>ignore))
+            logger.Debug(sprintf "Assembly '%s' has %i embedded resources." assembly.FullName resourceNames.Length)
             resourceNames
                 |> Array.toSeq
-                |> Seq.map (fun rn -> logger.Debug(new Msg(fun m -> m.Invoke(sprintf "Embeded resource: %s"  rn)|>ignore)))
+                |> Seq.map (fun rn -> logger.Debug(sprintf "Embeded resource: %s"  rn))
                 |> Seq.toArray
                 |> ignore
         ()
@@ -174,7 +174,7 @@ module EmbeddedResource =
         member this.FilePath = tempFilePath
         interface IDisposable with
             member x.Dispose() = 
-                logger.Debug(new Msg(fun m -> m.Invoke((sprintf "Disposing extracted embedded resource '%A'" tempFilePath))|>ignore))
+                logger.Debug(sprintf "Disposing extracted embedded resource '%A'" tempFilePath)
                 match (result{
                     let! folderPath = tempFolderPath
                     let! deleted = deleteDirectoryIfExists folderPath

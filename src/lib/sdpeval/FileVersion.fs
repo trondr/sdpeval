@@ -86,9 +86,9 @@ module internal FileVersion =
         match (sdpeval.F.fileExists path) with
         |true -> 
             let currentFileVersion = getCurrentFileVersion fileVersion
-            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "Current fileversion: '%A'." currentFileVersion))|>ignore))
+            logger.Debug(sprintf "Current fileversion: '%A'." currentFileVersion)
             isFileVersionBase currentFileVersion fileVersion
         |false -> 
-            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "File does not exist: '%s' (%s). Return: false" path F.processBit))|>ignore))
+            logger.Debug(sprintf "File does not exist: '%s' (%s). Return: false" path F.processBit)
             false
 

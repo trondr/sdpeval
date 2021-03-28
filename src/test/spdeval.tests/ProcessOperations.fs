@@ -37,14 +37,14 @@ module ProcessOperations =
             |>Seq.toArray
             |>ignore
 
-        logger.Debug(new Msg(fun m ->m.Invoke((sprintf "writeToLog command line"))|>ignore))        
+        logger.Debug(sprintf "writeToLog command line")        
         writeToLog logger.Info (sprintf "'%s' %s" (processExitData.FileName) processExitData.Arguments)
         
-        logger.Debug(new Msg(fun m ->m.Invoke((sprintf "writeToLog StdOutput"))|>ignore))
+        logger.Debug(sprintf "writeToLog StdOutput")
         if (not (String.IsNullOrWhiteSpace(processExitData.StdOutput))) then
             writeToLog logger.Info processExitData.StdOutput
          
-        logger.Debug(new Msg(fun m ->m.Invoke((sprintf "writeToLog StdError"))|>ignore))
+        logger.Debug(sprintf "writeToLog StdError")
         if (not (String.IsNullOrWhiteSpace(processExitData.StdError))) then
             writeToLog logger.Error processExitData.StdError
 

@@ -42,7 +42,7 @@ module internal RegistryOperations =
             getRegistryValueUnsafe hiveName subKeyPath valueName isRegType32
         with
         |ex ->
-            logger.Debug(new Msg(fun m -> m.Invoke( (sprintf "[%s\\%s]%s. Error: %s" hiveName subKeyPath valueName ex.Message))|>ignore))
+            logger.Debug(sprintf "[%s\\%s]%s. Error: %s" hiveName subKeyPath valueName ex.Message)
             None
      
     let toString (data:obj option) = 
